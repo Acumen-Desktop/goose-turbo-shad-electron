@@ -1,13 +1,24 @@
 {
-  "extends": "@repo/typescript-config/base.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@repo/ui/*": ["./*"]
-    }
-  },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts", "**/*.svelte"],
-  "exclude": ["node_modules", "dist"]
+	"extends": "@repo/typescript-config/base.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": ".",
+		"baseUrl": ".",
+		"paths": {
+			"@repo/ui/*": [
+				"./*"
+			]
+		}
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.mts",
+		"**/*.cts",
+		"**/*.svelte"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { type AxiosCacheInstance, setupCache } from 'axios-cache-interceptor';
+import { setupCache, type AxiosCacheInstance } from 'axios-cache-interceptor';
 
 export const client = axios.create({
 	baseURL: `https://api.example.com`,
