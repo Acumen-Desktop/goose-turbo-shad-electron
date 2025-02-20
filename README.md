@@ -7,7 +7,7 @@ This Turborepo starter is maintained by the Turborepo core team.
 Run the following command:
 
 ```sh
-npx create-turbo@latest -e with-svelte
+npx create-turbo@latest -e acumen-goose
 ```
 
 ## What's inside?
