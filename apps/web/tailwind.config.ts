@@ -2,10 +2,7 @@ import { type Config } from 'tailwindcss';
 
 export default {
 	darkMode: 'class',
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		'../../packages/ui/**/*.{html,js,svelte,ts}'
-	],
+	content: ['./src/**/*.{html,js,svelte,ts}', '../../packages/ui/**/*.{html,js,svelte,ts}'],
 	theme: {
 		container: {
 			center: true,
