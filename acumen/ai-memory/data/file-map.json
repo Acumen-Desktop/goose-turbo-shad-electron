@@ -1,211 +1,211 @@
 {
-  "+layout.svelte": [
-    "apps/shad_starter/src/routes/+layout.svelte",
-    "apps/web/src/routes/+layout.svelte"
-  ],
-  "+page.svelte": [
-    "apps/docs/src/routes/+page.svelte",
-    "apps/shad_starter/src/routes/+page.svelte",
-    "apps/shad_starter/src/routes/datapage/+page.svelte",
-    "apps/web/src/routes/+page.svelte",
-    "apps/web/src/routes/test/+page.svelte"
-  ],
-  "+page.ts": [
-    "apps/shad_starter/src/routes/+page.ts",
-    "apps/shad_starter/src/routes/datapage/+page.ts"
-  ],
-  ".gitignore": [
-    ".gitignore",
-    "apps/docs/.gitignore",
-    "apps/shad_starter/.gitignore",
-    "apps/web/.gitignore"
-  ],
-  ".npmrc": [
-    ".npmrc",
-    "apps/docs/.npmrc",
-    "apps/shad_starter/.npmrc",
-    "apps/web/.npmrc"
-  ],
-  ".prettierignore": [
-    ".prettierignore"
-  ],
-  ".prettierrc": [
-    ".prettierrc"
-  ],
-  ".yarnrc.yml": [
-    ".yarnrc.yml"
-  ],
-  "MyCounterButton.svelte": [
-    "packages/ui/components/MyCounterButton.svelte"
-  ],
-  "README.md": [
-    "README.md",
-    "apps/docs/README.md",
-    "apps/shad_starter/README.md",
-    "apps/web/README.md"
-  ],
-  "TSCONFIG.md": [
-    "apps/shad_starter/TSCONFIG.md"
-  ],
-  "alert-description.svelte": [
-    "apps/shad_starter/src/lib/components/ui/alert/alert-description.svelte"
-  ],
-  "alert-title.svelte": [
-    "apps/shad_starter/src/lib/components/ui/alert/alert-title.svelte"
-  ],
-  "alert.svelte": [
-    "apps/shad_starter/src/lib/components/ui/alert/alert.svelte"
-  ],
-  "app.css": [
-    "apps/shad_starter/src/app.css",
-    "apps/web/src/app.css"
-  ],
-  "app.d.ts": [
-    "apps/docs/src/app.d.ts",
-    "apps/shad_starter/src/app.d.ts",
-    "apps/web/src/app.d.ts"
-  ],
-  "app.html": [
-    "apps/docs/src/app.html",
-    "apps/shad_starter/src/app.html",
-    "apps/web/src/app.html"
-  ],
-  "app_OLD.css": [
-    "apps/web/src/app_OLD.css"
-  ],
-  "auth.svelte.ts": [
-    "apps/shad_starter/src/core/context/auth.svelte.ts"
-  ],
-  "base.json": [
-    "packages/typescript-config/base.json"
-  ],
-  "button.svelte": [
-    "apps/shad_starter/src/lib/components/ui/button/button.svelte",
-    "packages/ui/shadcn/button/button.svelte"
-  ],
-  "cameraModel.ts": [
-    "apps/shad_starter/src/core/types/cameraModel.ts"
-  ],
-  "cameraService.ts": [
-    "apps/shad_starter/src/core/services/api/cameraService.ts"
-  ],
-  "client.ts": [
-    "apps/shad_starter/src/core/services/client.ts"
-  ],
-  "components.json": [
-    "apps/shad_starter/components.json",
-    "packages/ui/shadcn/components.json"
-  ],
-  "date.ts": [
-    "apps/shad_starter/src/core/constants/date.ts"
-  ],
-  "eslint.config.js": [
-    "apps/docs/eslint.config.js",
-    "apps/shad_starter/eslint.config.js",
-    "apps/web/eslint.config.js",
-    "eslint.config.js",
-    "packages/ui/eslint.config.js"
-  ],
-  "favicon.png": [
-    "apps/docs/static/favicon.png",
-    "apps/shad_starter/static/favicon.png",
-    "apps/web/static/favicon.png"
-  ],
-  "file-index.json": [
-    "acumen/ai-memory/data/file-index.json"
-  ],
-  "footage.ts": [
-    "apps/shad_starter/src/core/constants/enums/footage.ts"
-  ],
-  "generate-file-index.mts": [
-    "acumen/ai-memory/scripts/generate-file-index.mts"
-  ],
-  "generate-file-map.mts": [
-    "acumen/ai-memory/scripts/generate-file-map.mts"
-  ],
-  "global.css": [
-    "packages/ui/global.css"
-  ],
-  "index.js": [
-    "packages/eslint-config/index.js"
-  ],
-  "index.test.ts": [
-    "apps/docs/src/index.test.ts",
-    "apps/web/src/index.test.ts"
-  ],
-  "index.ts": [
-    "apps/docs/src/lib/index.ts",
-    "apps/shad_starter/src/lib/components/ui/alert/index.ts",
-    "apps/shad_starter/src/lib/components/ui/button/index.ts",
-    "apps/shad_starter/src/lib/components/ui/skeleton/index.ts",
-    "apps/shad_starter/src/lib/index.ts",
-    "apps/web/src/lib/index.ts",
-    "packages/ui/index.ts",
-    "packages/ui/shadcn/button/index.ts"
-  ],
-  "package.json": [
-    "apps/docs/package.json",
-    "apps/shad_starter/package.json",
-    "apps/web/package.json",
-    "package.json",
-    "packages/eslint-config/package.json",
-    "packages/typescript-config/package.json",
-    "packages/ui/package.json"
-  ],
-  "photo.svelte": [
-    "apps/shad_starter/src/lib/components/custom/photo.svelte"
-  ],
-  "playwright.config.ts": [
-    "apps/docs/playwright.config.ts",
-    "apps/web/playwright.config.ts"
-  ],
-  "skeleton.svelte": [
-    "apps/shad_starter/src/lib/components/ui/skeleton/skeleton.svelte"
-  ],
-  "svelte.config.js": [
-    "apps/docs/svelte.config.js",
-    "apps/shad_starter/svelte.config.js",
-    "apps/web/svelte.config.js"
-  ],
-  "svelte.json": [
-    "packages/typescript-config/svelte.json"
-  ],
-  "tailwind.config.ts": [
-    "apps/web/tailwind.config.ts",
-    "packages/ui/shadcn/tailwind.config.ts"
-  ],
-  "tailwindcss-animate.css": [
-    "apps/shad_starter/src/tailwindcss-animate.css",
-    "apps/web/src/tailwindcss-animate.css"
-  ],
-  "tailwindcss-animate_OLD.css": [
-    "apps/web/src/tailwindcss-animate_OLD.css"
-  ],
-  "tsconfig.json": [
-    "apps/docs/tsconfig.json",
-    "apps/shad_starter/tsconfig.json",
-    "apps/web/tsconfig.json",
-    "packages/ui/tsconfig.json"
-  ],
-  "turbo.json": [
-    "turbo.json"
-  ],
-  "user.svelte.ts": [
-    "apps/shad_starter/src/core/context/user.svelte.ts"
-  ],
-  "userForm.svelte": [
-    "apps/shad_starter/src/lib/components/custom/userForm.svelte"
-  ],
-  "utils.ts": [
-    "apps/shad_starter/src/lib/utils.ts",
-    "packages/ui/shadcn/utils.ts"
-  ],
-  "vite.config.ts": [
-    "apps/docs/vite.config.ts",
-    "apps/shad_starter/vite.config.ts",
-    "apps/web/vite.config.ts"
-  ],
-  "yarn.lock": [
-    "yarn.lock"
-  ]
+	"+layout.svelte": [
+		"apps/shad_starter/src/routes/+layout.svelte",
+		"apps/web/src/routes/+layout.svelte"
+	],
+	"+page.svelte": [
+		"apps/docs/src/routes/+page.svelte",
+		"apps/shad_starter/src/routes/+page.svelte",
+		"apps/shad_starter/src/routes/datapage/+page.svelte",
+		"apps/web/src/routes/+page.svelte",
+		"apps/web/src/routes/test/+page.svelte"
+	],
+	"+page.ts": [
+		"apps/shad_starter/src/routes/+page.ts",
+		"apps/shad_starter/src/routes/datapage/+page.ts"
+	],
+	".gitignore": [
+		".gitignore",
+		"apps/docs/.gitignore",
+		"apps/shad_starter/.gitignore",
+		"apps/web/.gitignore"
+	],
+	".npmrc": [
+		".npmrc",
+		"apps/docs/.npmrc",
+		"apps/shad_starter/.npmrc",
+		"apps/web/.npmrc"
+	],
+	".prettierignore": [
+		".prettierignore"
+	],
+	".prettierrc": [
+		".prettierrc"
+	],
+	".yarnrc.yml": [
+		".yarnrc.yml"
+	],
+	"MyCounterButton.svelte": [
+		"packages/ui/components/MyCounterButton.svelte"
+	],
+	"README.md": [
+		"README.md",
+		"apps/docs/README.md",
+		"apps/shad_starter/README.md",
+		"apps/web/README.md"
+	],
+	"TSCONFIG.md": [
+		"apps/shad_starter/TSCONFIG.md"
+	],
+	"alert-description.svelte": [
+		"apps/shad_starter/src/lib/components/ui/alert/alert-description.svelte"
+	],
+	"alert-title.svelte": [
+		"apps/shad_starter/src/lib/components/ui/alert/alert-title.svelte"
+	],
+	"alert.svelte": [
+		"apps/shad_starter/src/lib/components/ui/alert/alert.svelte"
+	],
+	"app.css": [
+		"apps/shad_starter/src/app.css",
+		"apps/web/src/app.css"
+	],
+	"app.d.ts": [
+		"apps/docs/src/app.d.ts",
+		"apps/shad_starter/src/app.d.ts",
+		"apps/web/src/app.d.ts"
+	],
+	"app.html": [
+		"apps/docs/src/app.html",
+		"apps/shad_starter/src/app.html",
+		"apps/web/src/app.html"
+	],
+	"app_OLD.css": [
+		"apps/web/src/app_OLD.css"
+	],
+	"auth.svelte.ts": [
+		"apps/shad_starter/src/core/context/auth.svelte.ts"
+	],
+	"base.json": [
+		"packages/typescript-config/base.json"
+	],
+	"button.svelte": [
+		"apps/shad_starter/src/lib/components/ui/button/button.svelte",
+		"packages/ui/shadcn/button/button.svelte"
+	],
+	"cameraModel.ts": [
+		"apps/shad_starter/src/core/types/cameraModel.ts"
+	],
+	"cameraService.ts": [
+		"apps/shad_starter/src/core/services/api/cameraService.ts"
+	],
+	"client.ts": [
+		"apps/shad_starter/src/core/services/client.ts"
+	],
+	"components.json": [
+		"apps/shad_starter/components.json",
+		"packages/ui/shadcn/components.json"
+	],
+	"date.ts": [
+		"apps/shad_starter/src/core/constants/date.ts"
+	],
+	"eslint.config.js": [
+		"apps/docs/eslint.config.js",
+		"apps/shad_starter/eslint.config.js",
+		"apps/web/eslint.config.js",
+		"eslint.config.js",
+		"packages/ui/eslint.config.js"
+	],
+	"favicon.png": [
+		"apps/docs/static/favicon.png",
+		"apps/shad_starter/static/favicon.png",
+		"apps/web/static/favicon.png"
+	],
+	"file-index.json": [
+		"acumen/ai-memory/data/file-index.json"
+	],
+	"footage.ts": [
+		"apps/shad_starter/src/core/constants/enums/footage.ts"
+	],
+	"generate-file-index.mts": [
+		"acumen/ai-memory/scripts/generate-file-index.mts"
+	],
+	"generate-file-map.mts": [
+		"acumen/ai-memory/scripts/generate-file-map.mts"
+	],
+	"global.css": [
+		"packages/ui/global.css"
+	],
+	"index.js": [
+		"packages/eslint-config/index.js"
+	],
+	"index.test.ts": [
+		"apps/docs/src/index.test.ts",
+		"apps/web/src/index.test.ts"
+	],
+	"index.ts": [
+		"apps/docs/src/lib/index.ts",
+		"apps/shad_starter/src/lib/components/ui/alert/index.ts",
+		"apps/shad_starter/src/lib/components/ui/button/index.ts",
+		"apps/shad_starter/src/lib/components/ui/skeleton/index.ts",
+		"apps/shad_starter/src/lib/index.ts",
+		"apps/web/src/lib/index.ts",
+		"packages/ui/index.ts",
+		"packages/ui/shadcn/button/index.ts"
+	],
+	"package.json": [
+		"apps/docs/package.json",
+		"apps/shad_starter/package.json",
+		"apps/web/package.json",
+		"package.json",
+		"packages/eslint-config/package.json",
+		"packages/typescript-config/package.json",
+		"packages/ui/package.json"
+	],
+	"photo.svelte": [
+		"apps/shad_starter/src/lib/components/custom/photo.svelte"
+	],
+	"playwright.config.ts": [
+		"apps/docs/playwright.config.ts",
+		"apps/web/playwright.config.ts"
+	],
+	"skeleton.svelte": [
+		"apps/shad_starter/src/lib/components/ui/skeleton/skeleton.svelte"
+	],
+	"svelte.config.js": [
+		"apps/docs/svelte.config.js",
+		"apps/shad_starter/svelte.config.js",
+		"apps/web/svelte.config.js"
+	],
+	"svelte.json": [
+		"packages/typescript-config/svelte.json"
+	],
+	"tailwind.config.ts": [
+		"apps/web/tailwind.config.ts",
+		"packages/ui/shadcn/tailwind.config.ts"
+	],
+	"tailwindcss-animate.css": [
+		"apps/shad_starter/src/tailwindcss-animate.css",
+		"apps/web/src/tailwindcss-animate.css"
+	],
+	"tailwindcss-animate_OLD.css": [
+		"apps/web/src/tailwindcss-animate_OLD.css"
+	],
+	"tsconfig.json": [
+		"apps/docs/tsconfig.json",
+		"apps/shad_starter/tsconfig.json",
+		"apps/web/tsconfig.json",
+		"packages/ui/tsconfig.json"
+	],
+	"turbo.json": [
+		"turbo.json"
+	],
+	"user.svelte.ts": [
+		"apps/shad_starter/src/core/context/user.svelte.ts"
+	],
+	"userForm.svelte": [
+		"apps/shad_starter/src/lib/components/custom/userForm.svelte"
+	],
+	"utils.ts": [
+		"apps/shad_starter/src/lib/utils.ts",
+		"packages/ui/shadcn/utils.ts"
+	],
+	"vite.config.ts": [
+		"apps/docs/vite.config.ts",
+		"apps/shad_starter/vite.config.ts",
+		"apps/web/vite.config.ts"
+	],
+	"yarn.lock": [
+		"yarn.lock"
+	]
 }

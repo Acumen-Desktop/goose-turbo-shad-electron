@@ -1,31 +1,58 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env*"],
-  "globalEnv": ["NODE_ENV"],
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["**/*.{ts,tsx,js,jsx,svelte}"],
-      "outputs": [".svelte-kit/**", "!.svelte-kit/cache/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"],
-      "inputs": ["**/*.{ts,tsx,js,jsx,svelte}"]
-    },
-    "format": {
-      "inputs": ["**/*.{ts,tsx,js,jsx,svelte,json,md}"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"],
-      "inputs": ["**/*.{ts,tsx,svelte}"]
-    },
-    "check": {
-      "dependsOn": ["^check"],
-      "inputs": ["**/*.{ts,tsx,svelte}"]
-    },
-    "dev": {
-      "persistent": true,
-      "cache": false
-    }
-  }
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": [
+		".env*"
+	],
+	"globalEnv": [
+		"NODE_ENV"
+	],
+	"tasks": {
+		"build": {
+			"dependsOn": [
+				"^build"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,js,jsx,svelte}"
+			],
+			"outputs": [
+				".svelte-kit/**",
+				"!.svelte-kit/cache/**"
+			]
+		},
+		"format": {
+			"cache": false,
+			"inputs": [
+				"**/*.{ts,tsx,js,jsx,svelte,json,md}"
+			]
+		},
+		"lint": {
+			"dependsOn": [
+				"^lint",
+				"format"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,js,jsx,svelte}"
+			]
+		},
+		"check-types": {
+			"dependsOn": [
+				"^check-types"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,svelte}"
+			]
+		},
+		"check": {
+			"dependsOn": [
+				"^check"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,svelte}"
+			]
+		},
+		"dev": {
+			"persistent": true,
+			"cache": false
+		}
+	}
 }

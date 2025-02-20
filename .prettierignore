@@ -1,22 +1,31 @@
-# Build output
-.svelte-kit
+# Dot folders
+.*/**
+**/.svelte-kit/**
+
+# Dependencies
 node_modules
-build
+.pnp
+.pnp.js
+
+# Build outputs
 dist
+build
+coverage
+package
+
+# Package manager
+.yarn
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Turbo
 .turbo
-.next
-out
 
 # Environment
 .env
 .env.*
 !.env.example
-
-# Package manager files
-pnpm-lock.yaml
-pnpm-workspace.yaml
-package-lock.json
-yarn.lock
 
 # Cache
 .cache

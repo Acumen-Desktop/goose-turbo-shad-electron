@@ -1,20 +1,24 @@
 {
-  "name": "@repo/eslint-config",
-  "version": "0.0.0",
-  "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "globals": "^16.0.0"
-  },
-  "peerDependencies": {
-    "@eslint/eslintrc": "*",
-    "@eslint/js": "*",
-    "eslint": "*",
-    "eslint-config-prettier": "*",
-    "eslint-plugin-svelte": "*",
-    "typescript": "*",
-    "typescript-eslint": "*"
-  }
+	"name": "@repo/eslint-config",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./index.js"
+	},
+	"dependencies": {
+		"globals": "^16.0.0"
+	},
+	"peerDependencies": {
+		"@eslint/eslintrc": "*",
+		"@eslint/js": "*",
+		"eslint": "*",
+		"eslint-config-prettier": "*",
+		"eslint-plugin-svelte": "*",
+		"typescript": "*",
+		"typescript-eslint": "*"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
