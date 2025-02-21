@@ -1,24 +1,28 @@
 {
-	"extends": "@repo/typescript-config/base.json",
+	"extends": [
+		"../typescript-config/base.json"
+	],
 	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": ".",
-		"baseUrl": ".",
+		"types": [
+			"svelte"
+		],
 		"paths": {
-			"@repo/ui/*": [
+			"@/*": [
 				"./*"
 			]
 		}
 	},
 	"include": [
 		"**/*.ts",
-		"**/*.tsx",
-		"**/*.mts",
-		"**/*.cts",
-		"**/*.svelte"
+		"**/*.js",
+		"**/*.svelte",
+		"components/**/*",
+		"shadcn/**/*",
+		"svelte/**/*"
 	],
 	"exclude": [
 		"node_modules",
+		".turbo",
 		"dist"
 	]
 }

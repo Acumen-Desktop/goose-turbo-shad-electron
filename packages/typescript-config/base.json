@@ -19,14 +19,15 @@
 		"checkJs": true,
 		"resolveJsonModule": true,
 		"sourceMap": true,
-		"types": [
-			"svelte"
-		],
 		"verbatimModuleSyntax": false,
 		"ignoreDeprecations": "5.0",
 		"module": "ESNext",
 		"target": "ESNext",
-		"noEmit": true
+		"noEmit": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"exclude": [
 		"node_modules"
