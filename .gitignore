@@ -12,6 +12,7 @@ coverage
 .svelte-kit
 /build
 /package
+**/build/
 
 # misc
 .DS_Store
