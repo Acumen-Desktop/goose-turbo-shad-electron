@@ -8,6 +8,12 @@ export const config = ts.config(
 	...ts.configs.recommended,
 	...svelte.configs['flat/recommended'],
 	{
+		rules: {
+			'no-console': ['warn', { allow: ['warn', 'error'] }],
+			'no-unused-vars': 'warn',
+			'@typescript-eslint/explicit-function-return-type': 'warn',
+			'@typescript-eslint/no-explicit-any': 'warn'
+		},
 		languageOptions: {
 			globals: {
 				...globals.browser,
