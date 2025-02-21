@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path');
 const { MakerSquirrel } = require('@electron-forge/maker-squirrel');
 const { MakerZIP } = require('@electron-forge/maker-zip');

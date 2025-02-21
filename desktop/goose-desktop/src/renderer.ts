@@ -28,4 +28,4 @@
 
 import './index.css';
 
-console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+console.warn('👋 This message is being logged by "renderer.ts", included via Vite');

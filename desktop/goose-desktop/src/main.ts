@@ -7,7 +7,7 @@ if (started) {
 	app.quit();
 }
 
-const createWindow = () => {
+const createWindow = (): void => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		width: 800,
