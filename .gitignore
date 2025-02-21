@@ -38,4 +38,4 @@ vite.config.ts.timestamp-*
 # turbo
 .turbo
 
-goose
+goose-original
