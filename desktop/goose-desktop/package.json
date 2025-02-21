@@ -12,6 +12,7 @@
 	"scripts": {
 		"build": "vite build",
 		"check-types": "tsc --noEmit",
+		"dev": "vite dev",
 		"lint": "eslint .",
 		"make": "electron-forge make",
 		"package": "electron-forge package",
