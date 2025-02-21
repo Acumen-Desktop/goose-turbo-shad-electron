@@ -10,4 +10,4 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 	WithElementRef<HTMLAnchorAttributes> & {
 		variant?: ButtonVariant;
 		size?: ButtonSize;
-	}; 
+	};
