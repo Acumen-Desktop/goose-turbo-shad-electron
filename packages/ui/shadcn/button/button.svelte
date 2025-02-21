@@ -35,8 +35,6 @@
 			variant?: ButtonVariant;
 			size?: ButtonSize;
 		};
-
-	export { default } from './button.svelte';
 </script>
 
 <script lang="ts">
