@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+/* Button Component Styles */
+@layer components {
+	/* Base Button */
+	.btn-base {
+		@apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
+	}
+
+	/* Button Variants */
+	.btn-default {
+		@apply bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-70;
+	}
+
+	.btn-destructive {
+		@apply bg-[var(--destructive)] text-[var(--destructive-foreground)] opacity-80 hover:text-red-950 hover:opacity-100;
+	}
+
+	.btn-outline {
+		@apply border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)];
+	}
+
+	.btn-secondary {
+		@apply bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:opacity-80;
+	}
+
+	.btn-ghost {
+		@apply hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)];
+	}
+
+	.btn-link {
+		@apply text-[var(--primary)] underline-offset-4 hover:underline;
+	}
+
+	/* Button Sizes */
+	.btn-sm {
+		@apply h-9 rounded-md px-3;
+	}
+
+	.btn-default-size {
+		@apply h-10 px-4 py-2;
+	}
+
+	.btn-lg {
+		@apply h-11 rounded-md px-8;
+	}
+
+	.btn-icon {
+		@apply h-10 w-10;
+	}
+}

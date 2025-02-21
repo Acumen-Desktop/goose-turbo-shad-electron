@@ -38,7 +38,9 @@
 		<div class="flex w-full gap-6">
 			<!-- Left column -->
 			<div class="flex w-1/2 flex-col gap-6">
-				<div class="h-[500px] w-full overflow-y-auto rounded-md bg-gray-100 p-4 shadow-md">
+				<div
+					class="h-[500px] w-full overflow-y-auto rounded-md bg-gray-100 p-4 shadow-md dark:bg-gray-800"
+				>
 					<pre>{JSON.stringify(fetchedData, null, 2)}</pre>
 				</div>
 			</div>
