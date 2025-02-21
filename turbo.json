@@ -16,7 +16,10 @@
 			],
 			"outputs": [
 				".svelte-kit/**",
-				"!.svelte-kit/cache/**"
+				"!.svelte-kit/cache/**",
+				".vite/**",
+				"out/**",
+				"dist/**"
 			]
 		},
 		"format": {
@@ -53,6 +56,35 @@
 		"dev": {
 			"persistent": true,
 			"cache": false
+		},
+		"package": {
+			"dependsOn": [
+				"^build"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,js,jsx}"
+			],
+			"outputs": [
+				"out/**",
+				"dist/**"
+			]
+		},
+		"make": {
+			"dependsOn": [
+				"^build",
+				"package"
+			],
+			"inputs": [
+				"**/*.{ts,tsx,js,jsx}"
+			],
+			"outputs": [
+				"out/**",
+				"dist/**"
+			]
+		},
+		"start": {
+			"cache": false,
+			"persistent": true
 		}
 	}
 }
