@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import started from 'electron-squirrel-startup';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -16,21 +16,51 @@ const createWindow = (): void => {
 		height: 1000,
 		backgroundColor: '#000',
 		webPreferences: {
+			nodeIntegration: false,
+			contextIsolation: true,
 			preload: path.join(__dirname, 'preload.js')
 		}
 	});
 
-	console.log(
-		'Line 23 - main.ts - MAIN_WINDOW_VITE_DEV_SERVER_URL',
-		MAIN_WINDOW_VITE_DEV_SERVER_URL
-	);
+	// Load the app URL from environment variable
+	const appUrl = process.env.ELECTRON_APP_URL;
 
-	// and load the index.html of the app.
-	if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-		mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+	if (appUrl) {
+		// Ensure we're using the correct URL by logging it
+		console.log(`Line 26 - main.ts - Loading app from URL: ${appUrl}`);
+		mainWindow.loadURL(appUrl).catch((err) => {
+			console.error(`Failed to load URL ${appUrl}:`, err);
+			// If loading fails, show the error page
+			mainWindow.loadFile(path.join(__dirname, '../error.html'));
+		});
 	} else {
-		mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+		// Fallback to a local error page
+		mainWindow.loadFile(path.join(__dirname, '../error.html'));
+		console.error('No ELECTRON_APP_URL provided');
 	}
+
+	// Basic IPC setup
+	ipcMain.on('app:ping', (event) => {
+		console.log('Line 34 - main.ts - Received ping from renderer');
+		event.reply('app:pong', {
+			message: 'Pong from main!',
+			app: process.env.SELECTED_APP || 'unknown'
+		});
+	});
+
+	// Handle window close
+	mainWindow.on('close', (e) => {
+		const choice = require('electron').dialog.showMessageBoxSync(mainWindow, {
+			type: 'question',
+			buttons: ['Yes', 'No'],
+			title: 'Confirm',
+			message: 'Are you sure you want to quit?'
+		});
+
+		if (choice === 1) {
+			e.preventDefault();
+		}
+	});
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
@@ -45,9 +75,7 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+	app.quit();
 });
 
 app.on('activate', () => {
