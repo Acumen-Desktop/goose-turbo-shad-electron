@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error - Application Load Failed</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        h1 {
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+            color: #cccccc;
+        }
+        .error-details {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .debug-info {
+            margin-top: 30px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .debug-info h2 {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .debug-item {
+            margin: 5px 0;
+            padding: 8px;
+            background: #222;
+            border-radius: 4px;
+        }
+        .debug-label {
+            color: #888;
+            display: inline-block;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Application Error</h1>
+        <p>The application failed to load properly.</p>
+        
+        <div class="error-details" id="errorDetails">
+            Loading failed. Please check the application logs for more details.
+        </div>
+
+        <div class="debug-info">
+            <h2>Debug Information</h2>
+            <div class="debug-item">
+                <span class="debug-label">Error Type:</span>
+                <span id="errorType">Unknown</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">Error Time:</span>
+                <span id="errorTime">Unknown</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">App URL:</span>
+                <span id="appUrl">Unknown</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">Dev Server:</span>
+                <span id="devServer">Unknown</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">Environment:</span>
+                <span id="nodeEnv">Unknown</span>
+            </div>
+            <div class="debug-item">
+                <span class="debug-label">Stack Trace:</span>
+                <pre id="stackTrace" style="margin: 5px 0 0 0; white-space: pre-wrap;">None available</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        const params = new URLSearchParams(window.location.search);
+        
+        // Update error details
+        document.getElementById('errorDetails').textContent = params.get('message') || 'Unknown error';
+        document.getElementById('errorType').textContent = params.get('type') || 'Unknown';
+        document.getElementById('errorTime').textContent = new Date().toLocaleString();
+        document.getElementById('appUrl').textContent = params.get('appUrl') || 'Not provided';
+        document.getElementById('devServer').textContent = params.get('devServer') || 'Not available';
+        document.getElementById('nodeEnv').textContent = params.get('nodeEnv') || 'Unknown';
+        document.getElementById('stackTrace').textContent = params.get('stack') || 'No stack trace available';
+    </script>
+</body>
+</html> 

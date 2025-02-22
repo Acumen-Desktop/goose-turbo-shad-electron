@@ -2,13 +2,18 @@ import path from 'node:path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import started from 'electron-squirrel-startup';
 
+// Handle uncaught errors at the top level
+process.on('uncaughtException', (err) => {
+	console.error('CRITICAL ERROR:', err);
+	process.exit(1);
+});
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
 	app.quit();
 }
 
-const createWindow = (): void => {
-	// Create the browser window.
+const createWindow = async (): Promise<void> => {
 	const mainWindow = new BrowserWindow({
 		x: 2048,
 		y: 0,
@@ -25,18 +30,73 @@ const createWindow = (): void => {
 	// Load the app URL from environment variable
 	const appUrl = process.env.ELECTRON_APP_URL;
 
-	if (appUrl) {
-		// Ensure we're using the correct URL by logging it
-		console.log(`Line 26 - main.ts - Loading app from URL: ${appUrl}`);
-		mainWindow.loadURL(appUrl).catch((err) => {
-			console.error(`Failed to load URL ${appUrl}:`, err);
-			// If loading fails, show the error page
-			mainWindow.loadFile(path.join(__dirname, '../error.html'));
+	try {
+		if (appUrl) {
+			await mainWindow.loadURL(appUrl);
+		} else if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+			await mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+		} else if (MAIN_WINDOW_VITE_NAME) {
+			const indexPath = path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
+			await mainWindow.loadFile(indexPath);
+		} else {
+			throw new Error('No valid app URL or build found');
+		}
+	} catch (err) {
+		// Get error page path, with fallback if app is not ready
+		let errorPath: string;
+		try {
+			errorPath = path.join(app.getAppPath(), 'static/error.html');
+		} catch (appError) {
+			// Fallback to a relative path if app is not ready
+			console.error('Line 50 - main.ts - Failed to get app path:', appError);
+			errorPath = path.join(__dirname, '../../static/error.html');
+		}
+
+		const params = new URLSearchParams({
+			message: err.message || 'Unknown error',
+			type: err.name || 'Error',
+			stack: err.stack || '',
+			appUrl: appUrl || '',
+			devServer: MAIN_WINDOW_VITE_DEV_SERVER_URL || '',
+			nodeEnv: process.env.NODE_ENV || ''
 		});
-	} else {
-		// Fallback to a local error page
-		mainWindow.loadFile(path.join(__dirname, '../error.html'));
-		console.error('No ELECTRON_APP_URL provided');
+
+		try {
+			const errorUrl = `file://${errorPath}?${params.toString()}`;
+			console.log(`Line 62 - main.ts - Loading error page from: ${errorUrl}`);
+			await mainWindow.loadURL(errorUrl);
+		} catch (errorPageError) {
+			// If error page fails, try loading it without parameters
+			console.error(
+				'Line 56 - main.ts - Failed to load error page with parameters:',
+				errorPageError
+			);
+			try {
+				await mainWindow.loadFile(errorPath);
+			} catch (plainErrorPageError) {
+				// If both attempts fail, show inline error
+				console.error('Line 66 - main.ts - Failed to load plain error page:', plainErrorPageError);
+				const inlineHtml = encodeURIComponent(
+					`
+					<html><head><title>Critical Error</title><meta charset="utf-8"></head>
+					<body style="background: #1a1a1a; color: #fff; font-family: sans-serif; padding: 2em; text-align: center;">
+						<h1 style="color: #ff4444;">Critical Error</h1>
+						<p>Failed to load both the application and the error page.</p>
+						<div style="text-align: left; margin: 20px auto; max-width: 800px;">
+							<h3 style="color: #888;">Application Error:</h3>
+							<pre style="background: #333; padding: 1em; margin: 1em; white-space: pre-wrap; word-break: break-word;">${err.message}\n\n${err.stack || ''}</pre>
+							<h3 style="color: #888;">Error Page Error:</h3>
+							<pre style="background: #333; padding: 1em; margin: 1em; white-space: pre-wrap; word-break: break-word;">${errorPageError.message}</pre>
+						</div>
+					</body></html>
+				`
+						.trim()
+						.replace(/\s+/g, ' ')
+				);
+
+				await mainWindow.webContents.loadURL(`data:text/html;charset=utf-8,${inlineHtml}`);
+			}
+		}
 	}
 
 	// Basic IPC setup
@@ -50,16 +110,16 @@ const createWindow = (): void => {
 
 	// Handle window close
 	mainWindow.on('close', (e) => {
-		const choice = require('electron').dialog.showMessageBoxSync(mainWindow, {
-			type: 'question',
-			buttons: ['Yes', 'No'],
-			title: 'Confirm',
-			message: 'Are you sure you want to quit?'
-		});
-
-		if (choice === 1) {
-			e.preventDefault();
-		}
+		// TODO add this back in
+		// const choice = require('electron').dialog.showMessageBoxSync(mainWindow, {
+		// 	type: 'question',
+		// 	buttons: ['Yes', 'No'],
+		// 	title: 'Confirm',
+		// 	message: 'Are you sure you want to quit?'
+		// });
+		// if (choice === 1) {
+		// 	e.preventDefault();
+		// }
 	});
 
 	// Open the DevTools.

@@ -16,7 +16,8 @@
 		"make": "electron-forge make",
 		"package": "electron-forge package",
 		"publish": "electron-forge publish",
-		"start": "electron-forge start"
+		"start": "electron-forge start",
+		"start:apps": "node scripts/dev.mjs "
 	},
 	"dependencies": {
 		"electron-squirrel-startup": "^1.0.1"
