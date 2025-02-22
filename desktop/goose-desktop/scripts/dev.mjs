@@ -95,20 +95,9 @@ async function main() {
 		});
 
 		console.log('Line 97 - Dev server is ready, starting Electron...');
-
-		// Build TypeScript files
-		console.log('Building TypeScript files...');
-		const buildProcess = spawn('yarn', ['build'], {
-			cwd: ROOT_DIR,
-			stdio: 'inherit',
-			shell: true
-		});
-
-		await new Promise((resolve, reject) => {
-			buildProcess.on('exit', (code) => {
-				if (code === 0) resolve();
-				else reject(new Error(`Build failed with code ${code}`));
-			});
+		console.log('Line 98 - Debug - Electron env:', {
+			ELECTRON_APP_URL: `http://localhost:${port}`,
+			SELECTED_APP: selectedApp
 		});
 
 		// Start electron using yarn

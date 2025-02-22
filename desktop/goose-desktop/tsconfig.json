@@ -1,8 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
+		"target": "ESNext",
+		"module": "commonjs",
 		"allowJs": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
@@ -10,15 +9,7 @@
 		"sourceMap": true,
 		"baseUrl": ".",
 		"outDir": "dist",
-		"strict": true,
-		"paths": {
-			"*": [
-				"node_modules/*"
-			]
-		}
-	},
-	"include": [
-		"src/**/*",
-		"scripts/**/*"
-	]
+		"moduleResolution": "node",
+		"resolveJsonModule": true
+	}
 }
