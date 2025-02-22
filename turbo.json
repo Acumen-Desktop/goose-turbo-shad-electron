@@ -85,6 +85,10 @@
 		"start": {
 			"cache": false,
 			"persistent": true
+		},
+		"start:apps": {
+			"cache": false,
+			"persistent": true
 		}
 	}
 }
