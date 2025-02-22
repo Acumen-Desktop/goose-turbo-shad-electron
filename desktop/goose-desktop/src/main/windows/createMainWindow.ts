@@ -50,7 +50,7 @@ function setupWindowLogging(window: BrowserWindow): void {
 	});
 
 	window.webContents.on('did-fail-load', (_, errorCode, errorDescription, validatedURL) => {
-		console.error('Line 42 - createMainWindow.ts - Failed to load:', {
+		console.error('Failed to load:', {
 			errorCode,
 			errorDescription,
 			validatedURL
@@ -65,23 +65,23 @@ function setupWindowLogging(window: BrowserWindow): void {
 async function loadAppContent(window: BrowserWindow): Promise<void> {
 	// Add load timeout detection
 	const timeout = setTimeout(() => {
-		console.error('Line 29 - createMainWindow.ts - Window load timed out after 10 seconds');
+		console.error('Window load timed out after 10 seconds');
 	}, 10000);
 
-	// Log environment variables
 	const appUrl = process.env.ELECTRON_APP_URL;
-	console.log(`Line 55 - createMainWindow.ts - Environment variables:`, {
-		appUrl,
-		MAIN_WINDOW_VITE_DEV_SERVER_URL,
-		MAIN_WINDOW_VITE_NAME,
-		NODE_ENV: process.env.NODE_ENV,
-		currentDirectory: __dirname,
-		workspaceRoot: process.cwd()
-	});
+
+	// Log environment variables in development only
+	if (process.env.NODE_ENV === 'development') {
+		console.log('Development environment variables:', {
+			appUrl,
+			MAIN_WINDOW_VITE_DEV_SERVER_URL,
+			MAIN_WINDOW_VITE_NAME,
+			NODE_ENV: process.env.NODE_ENV
+		});
+	}
 
 	try {
 		if (appUrl) {
-			console.log(`Line 65 - createMainWindow.ts - Loading from appUrl: ${appUrl}`);
 			await window.loadURL(appUrl);
 		} else if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
 			await loadFromDevServer(window);
@@ -93,36 +93,27 @@ async function loadAppContent(window: BrowserWindow): Promise<void> {
 		clearTimeout(timeout);
 	} catch (err) {
 		clearTimeout(timeout);
-		console.error(`Line 94 - createMainWindow.ts - Error loading window:`, err);
+		console.error('Error loading window:', err);
 		await handleWindowLoadError(window, err, appUrl);
 	}
 }
 
 async function loadFromDevServer(window: BrowserWindow): Promise<void> {
-	console.log(
-		`Line 68 - createMainWindow.ts - Loading from dev server: ${MAIN_WINDOW_VITE_DEV_SERVER_URL}`
-	);
 	try {
 		const response = await fetch(MAIN_WINDOW_VITE_DEV_SERVER_URL);
 		const html = await response.text();
-		console.log(
-			`Line 73 - createMainWindow.ts - Dev server responded with HTML length: ${html.length}`
-		);
 		if (!html.includes('renderer.ts')) {
-			console.error(
-				'Line 75 - createMainWindow.ts - Dev server response does not contain renderer.ts'
-			);
+			console.error('Dev server response does not contain renderer.ts');
 		}
 	} catch (err) {
-		console.error('Line 78 - createMainWindow.ts - Dev server check failed:', err);
+		console.error('Dev server check failed:', err);
 	}
 	await window.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
 }
 
 async function loadFromFile(window: BrowserWindow): Promise<void> {
 	const basePath = process.env.NODE_ENV === 'development' ? 'src/renderer' : 'dist';
-	const indexPath = path.join(process.cwd(), basePath, 'index.html');
-	console.log(`Line 86 - createMainWindow.ts - Loading from file: ${indexPath}`);
+	const indexPath = path.join(process.cwd(), basePath, MAIN_WINDOW_VITE_NAME);
 	await window.loadFile(indexPath);
 }
 

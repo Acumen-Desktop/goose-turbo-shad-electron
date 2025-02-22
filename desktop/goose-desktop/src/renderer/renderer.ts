@@ -50,7 +50,6 @@ pingButton?.addEventListener('click', () => {
 
 // Set up the pong listener
 const cleanup = window.electron.onPong((data) => {
-	console.log(`Line 31 - renderer.ts - Received pong:`, data);
 	responseDiv.textContent = `Received: ${JSON.stringify(data, null, 2)}`;
 });
 
