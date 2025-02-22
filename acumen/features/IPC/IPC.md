@@ -10,6 +10,8 @@ The IPC system in Goose Desktop follows Electron's security best practices:
 - Implements proper context isolation
 - Avoids exposing the entire `ipcRenderer` object
 - Provides typed interfaces for all IPC communications
+- Handles configuration through process arguments
+- Implements comprehensive error handling
 
 ## API Interfaces
 
@@ -37,7 +39,7 @@ type ElectronAPI = {
 
 	// Notifications & Logging
 	logInfo: (txt: string) => void;
-	showNotification: (data: any) => void;
+	showNotification: (data: { title: string; body: string }) => void;
 
 	// Power Management
 	startPowerSaveBlocker: () => Promise<number>;
@@ -55,6 +57,7 @@ type ElectronAPI = {
 		channel: string,
 		callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void
 	) => void;
+	send: (channel: string, ...args: any[]) => void;
 };
 ```
 
@@ -65,6 +68,20 @@ type AppConfigAPI = {
 	get: (key: string) => any;
 	getAll: () => Record<string, any>;
 };
+```
+
+### Configuration Interface
+
+```typescript
+interface AppConfig {
+	GOOSE_PROVIDER: string;
+	GOOSE_MODEL: string;
+	GOOSE_API_HOST: string;
+	GOOSE_PORT: number;
+	GOOSE_WORKING_DIR: string;
+	secretKey: string;
+	REQUEST_DIR?: string;
+}
 ```
 
 ## IPC Channels
@@ -103,10 +120,29 @@ type AppConfigAPI = {
 
 ### Preload Script (preload.ts)
 
-- Establishes secure bridge between renderer and main processes
-- Exposes APIs through contextBridge
-- Implements type-safe interfaces
-- Handles cleanup of event listeners
+```typescript
+// Configuration parsing from process arguments
+const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');
+
+// AppConfig exposure
+contextBridge.exposeInMainWorld('appConfig', {
+	get: (key) => config[key],
+	getAll: () => config
+});
+
+// ElectronAPI exposure
+contextBridge.exposeInMainWorld('electron', {
+	getConfig: () => config,
+	hideWindow: () => ipcRenderer.send('hide-window'),
+	directoryChooser: (replace) => ipcRenderer.send('directory-chooser', replace),
+	createChatWindow: (query, dir, version) =>
+		ipcRenderer.send('create-chat-window', query, dir, version),
+	// ... other methods
+	on: (channel, callback) => ipcRenderer.on(channel, callback),
+	off: (channel, callback) => ipcRenderer.off(channel, callback),
+	send: (channel, ...args) => ipcRenderer.send(channel, ...args)
+});
+```
 
 ### Main Process (main.ts)
 
@@ -115,23 +151,55 @@ type AppConfigAPI = {
 - Handles system integration
 - Manages application state and configuration
 
+#### Error Handling Example
+
+```typescript
+// Global error handler
+const handleFatalError = (error: Error) => {
+	const windows = BrowserWindow.getAllWindows();
+	windows.forEach((win) => {
+		win.webContents.send('fatal-error', error.message || 'An unexpected error occurred');
+	});
+};
+
+process.on('uncaughtException', (error) => {
+	console.error('Uncaught Exception:', error);
+	handleFatalError(error);
+});
+
+process.on('unhandledRejection', (error) => {
+	console.error('Unhandled Rejection:', error);
+	handleFatalError(error instanceof Error ? error : new Error(String(error)));
+});
+```
+
 ## Security Considerations
 
 1. Context Isolation
 
    - Enabled by default
    - Prevents direct access to Node.js and Electron APIs from renderer
+   - Configuration passed through process arguments
 
 2. Preload Security
 
    - Uses contextBridge for safe exposure of APIs
    - Implements proper type checking
    - Avoids exposing entire IPC interfaces
+   - Validates configuration data
 
 3. Event Handling
+
    - Implements proper cleanup of event listeners
    - Uses typed event interfaces
    - Validates event data
+   - Handles errors gracefully
+
+4. Window Management
+   - Implements secure window creation
+   - Manages window lifecycle properly
+   - Handles window state persistence
+   - Implements proper window cleanup
 
 ## Usage Examples
 
@@ -159,12 +227,33 @@ const path = await window.electron.selectFileOrDirectory();
 
 ```typescript
 // Listen for events
-window.electron.on('custom-event', (event, ...args) => {
+const handleEvent = (event: Electron.IpcRendererEvent, ...args: any[]) => {
 	// Handle event
-});
+};
+window.electron.on('custom-event', handleEvent);
 
 // Clean up listeners
-window.electron.off('custom-event', eventHandler);
+window.electron.off('custom-event', handleEvent);
+```
+
+### Error Handling
+
+```typescript
+// Handle fatal errors
+window.electron.on('fatal-error', (event, errorMessage) => {
+	console.error('Fatal error:', errorMessage);
+	// Handle error appropriately
+});
+```
+
+### Configuration Access
+
+```typescript
+// Get specific config value
+const provider = window.appConfig.get('GOOSE_PROVIDER');
+
+// Get all config
+const config = window.appConfig.getAll();
 ```
 
 ## Best Practices
@@ -175,3 +264,20 @@ window.electron.off('custom-event', eventHandler);
 4. Validate data before sending through IPC channels
 5. Use invoke for operations that need responses
 6. Keep IPC operations atomic and focused
+7. Use proper window management practices
+8. Implement proper security measures
+9. Handle configuration securely
+10. Clean up resources properly
+
+## Testing Considerations
+
+1. Test error scenarios
+2. Validate type safety
+3. Test window lifecycle
+4. Verify event cleanup
+5. Test configuration handling
+6. Verify security measures
+7. Test system integration
+8. Validate error handling
+9. Test resource cleanup
+10. Verify IPC communication
