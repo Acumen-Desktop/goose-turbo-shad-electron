@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <style>
+      body.dark {
+        background-color: #000;
+        color: #fff;
+      }
+      
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 20px 0;
+        background: #444;
+        color: #fff;
+        border: 1px solid #666;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background: #555;
+      }
+      
+      #response {
+        padding: 10px;
+        margin: 10px 0;
+        background: #222;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+    </style>
+
+  </head>
+  <body class="dark">
+    <h1>💖 Hello World!</h1>
+    <p>Welcome to your Electron application.</p>
+    <button id="pingButton">Send Ping</button>
+    <div id="response">Response will appear here...</div>
+    <script type="module" src="./renderer.ts"></script>
+  </body>
+</html>

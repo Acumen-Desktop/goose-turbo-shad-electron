@@ -24,12 +24,12 @@ const config = {
 			build: [
 				{
 					// `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-					entry: 'src/main.ts',
+					entry: 'src/main/main.ts',
 					config: 'vite.main.config.ts',
 					target: 'main'
 				},
 				{
-					entry: 'src/preload.ts',
+					entry: 'src/main/preload.ts',
 					config: 'vite.preload.config.ts',
 					target: 'preload'
 				}
@@ -37,7 +37,8 @@ const config = {
 			renderer: [
 				{
 					name: 'main_window',
-					config: 'vite.renderer.config.ts'
+					config: 'vite.renderer.config.ts',
+					entry: path.join(__dirname, 'src/renderer/index.html')
 				}
 			]
 		}),

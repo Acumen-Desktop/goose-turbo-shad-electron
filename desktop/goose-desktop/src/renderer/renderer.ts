@@ -28,4 +28,33 @@
 
 import './index.css';
 
+// Get the window interface that was exposed by the preload script
+declare global {
+	interface Window {
+		electron: {
+			ping: () => void;
+			onPong: (callback: (data: any) => void) => () => void;
+		};
+	}
+}
+
+// Get DOM elements
+const pingButton = document.getElementById('pingButton') as HTMLButtonElement;
+const responseDiv = document.getElementById('response') as HTMLDivElement;
+
+// Add click handler for the ping button
+pingButton?.addEventListener('click', () => {
+	responseDiv.textContent = 'Sending ping...';
+	window.electron.ping();
+});
+
+// Set up the pong listener
+const cleanup = window.electron.onPong((data) => {
+	console.log(`Line 31 - renderer.ts - Received pong:`, data);
+	responseDiv.textContent = `Received: ${JSON.stringify(data, null, 2)}`;
+});
+
+// Clean up the listener when the window unloads
+window.addEventListener('unload', cleanup);
+
 console.warn('👋 This message is being logged by "renderer.ts", included via Vite');
