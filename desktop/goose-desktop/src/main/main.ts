@@ -1,18 +1,18 @@
 import { app, BrowserWindow } from 'electron';
 import started from 'electron-squirrel-startup';
 import { createMainWindow } from './windows/createMainWindow';
-import { setupAppHandlers, setupErrorHandlers, setupWindowHandlers } from './utils_setup';
+import { setupAppHandlers, setupErrorHandlers } from './utils_setup';
+import { setupIpcHandlers } from './ipc/setup';
 
 let mainWindow: BrowserWindow | null = null;
 
 const initializeApp = async (): Promise<void> => {
 	try {
 		mainWindow = await createMainWindow();
-		const cleanupWindowHandlers = setupWindowHandlers(mainWindow);
+		const cleanupIpc = setupIpcHandlers(mainWindow);
 		
 		mainWindow.on('close', () => {
-			cleanupWindowHandlers();
-			// TODO: Add confirmation dialog
+			cleanupIpc();
 		});
 		
 	} catch (err) {

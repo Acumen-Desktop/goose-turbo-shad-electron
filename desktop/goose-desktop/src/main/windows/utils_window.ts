@@ -1,21 +1,17 @@
-import type { ChildProcessByStdio } from 'node:child_process';
+import type { ChildProcess } from 'child_process';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { BrowserWindow } from 'electron';
-import { startGoosed } from '../../ipc/handlers/goosed';
+import { startGoosed, setGoosedProcess } from '../handlers/goosed';
 
-interface WindowOptions {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-  title?: string;
-}
-
-export async function createWindow(options: WindowOptions = {}): Promise<[BrowserWindow, ChildProcessByStdio<null, Readable, Readable>]> {
+export const createWindow = async (options: {
+    title: string;
+    x?: number;
+    y?: number;
+    width: number;
+    height: number;
+}): Promise<[BrowserWindow, ChildProcess]> => {
   const [port, dir, goosedProcess] = await startGoosed();
-
-// console.log('Line 18 - utils_window.ts - __dirname:', __dirname);
 
   const window = new BrowserWindow({
     x: options.x ?? 2048,
@@ -48,6 +44,8 @@ export async function createWindow(options: WindowOptions = {}): Promise<[Browse
   }
 
   window.webContents.openDevTools();
+
+  setGoosedProcess(goosedProcess);
 
   return [window, goosedProcess];
 }
