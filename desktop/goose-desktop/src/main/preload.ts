@@ -1,66 +1,91 @@
-import { contextBridge, ipcRenderer } from 'electron';
-import { IPC_CHANNELS } from '../ipc_OLD/types/interfaces';
+import Electron, { contextBridge, ipcRenderer } from 'electron';
 
-// Parse config from process arguments
 const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');
 
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
-contextBridge.exposeInMainWorld('electron', {
-	// Configuration
-	getConfig: () => config,
+// Define the API types in a single place
+type ElectronAPI = {
+  getConfig: () => Record<string, any>;
+  hideWindow: () => void;
+  directoryChooser: (replace: string) => void;
+  createChatWindow: (query?: string, dir?: string, version?: string) => void;
+  logInfo: (txt: string) => void;
+  showNotification: (data: any) => void;
+  openInChrome: (url: string) => void;
+  fetchMetadata: (url: string) => Promise<any>;
+  reloadApp: () => void;
+  checkForOllama: () => Promise<boolean>;
+  selectFileOrDirectory: () => Promise<string>;
+  startPowerSaveBlocker: () => Promise<number>;
+  stopPowerSaveBlocker: () => Promise<void>;
+  getBinaryPath: (binaryName: string) => Promise<string>;
+  on: (
+    channel: string,
+    callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void
+  ) => void;
+  off: (
+    channel: string,
+    callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void
+  ) => void;
+  emit: (channel: string, ...args: any[]) => void;
+};
 
-	// Window Management
-	hideWindow: () => ipcRenderer.send(IPC_CHANNELS.HIDE_WINDOW),
-	createChatWindow: (query?: string, dir?: string, version?: string) =>
-		ipcRenderer.send(IPC_CHANNELS.CREATE_CHAT_WINDOW, query, dir, version),
-	createWingToWingWindow: (query: string) =>
-		ipcRenderer.send(IPC_CHANNELS.CREATE_WING_TO_WING_WINDOW, query),
+type AppConfigAPI = {
+  get: (key: string) => any;
+  getAll: () => Record<string, any>;
+};
 
-	// File System Operations
-	directoryChooser: (replace: boolean) => ipcRenderer.send(IPC_CHANNELS.DIRECTORY_CHOOSER, replace),
-	selectFileOrDirectory: () => ipcRenderer.invoke(IPC_CHANNELS.SELECT_FILE_OR_DIRECTORY),
+type TestAPI = {
+  sendPing: () => Promise<any>;
+};
 
-	// System Integration
-	openInChrome: (url: string) => ipcRenderer.send(IPC_CHANNELS.OPEN_IN_CHROME, url),
-	fetchMetadata: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.FETCH_METADATA, url),
-	reloadApp: () => ipcRenderer.send(IPC_CHANNELS.RELOAD_APP),
-	getBinaryPath: (binaryName: string) =>
-		ipcRenderer.invoke(IPC_CHANNELS.GET_BINARY_PATH, binaryName),
+const electronAPI: ElectronAPI = {
+  getConfig: () => config,
+  hideWindow: () => ipcRenderer.send('hide-window'),
+  directoryChooser: (replace: string) => ipcRenderer.send('directory-chooser', replace),
+  createChatWindow: (query?: string, dir?: string, version?: string) =>
+    ipcRenderer.send('create-chat-window', query, dir, version),
+  logInfo: (txt: string) => ipcRenderer.send('logInfo', txt),
+  showNotification: (data: any) => ipcRenderer.send('notify', data),
+  openInChrome: (url: string) => ipcRenderer.send('open-in-chrome', url),
+  fetchMetadata: (url: string) => ipcRenderer.invoke('fetch-metadata', url),
+  reloadApp: () => ipcRenderer.send('reload-app'),
+  checkForOllama: () => ipcRenderer.invoke('check-ollama'),
+  selectFileOrDirectory: () => ipcRenderer.invoke('select-file-or-directory'),
+  startPowerSaveBlocker: () => ipcRenderer.invoke('start-power-save-blocker'),
+  stopPowerSaveBlocker: () => ipcRenderer.invoke('stop-power-save-blocker'),
+  getBinaryPath: (binaryName: string) => ipcRenderer.invoke('get-binary-path', binaryName),
+  on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => {
+    ipcRenderer.on(channel, callback);
+  },
+  off: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => {
+    ipcRenderer.off(channel, callback);
+  },
+  emit: (channel: string, ...args: any[]) => {
+    ipcRenderer.emit(channel, ...args);
+  },
+};
 
-	// Notifications & Logging
-	logInfo: (txt: string) => ipcRenderer.send(IPC_CHANNELS.LOG_INFO, txt),
-	showNotification: (data: { title: string; body: string }) =>
-		ipcRenderer.send(IPC_CHANNELS.NOTIFY, data),
+const appConfigAPI: AppConfigAPI = {
+  get: (key: string) => config[key],
+  getAll: () => config,
+};
 
-	// Power Management
-	startPowerSaveBlocker: () => ipcRenderer.invoke(IPC_CHANNELS.START_POWER_SAVE_BLOCKER),
-	stopPowerSaveBlocker: () => ipcRenderer.invoke(IPC_CHANNELS.STOP_POWER_SAVE_BLOCKER),
+const testAPI = {
 
-	// Ollama Integration
-	checkForOllama: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_OLLAMA),
+  sendPing: () => ipcRenderer.invoke(IPC.TEST.PING),
 
-	// Event Management
-	on: (channel: string, callback: (...args: any[]) => void) => ipcRenderer.on(channel, callback),
-	off: (channel: string, callback: (...args: any[]) => void) => ipcRenderer.off(channel, callback),
-	send: (channel: string, ...args: any[]) => ipcRenderer.send(channel, ...args),
+}
 
-	// Test Ping Pong
-	ping: () => ipcRenderer.send(IPC_CHANNELS.PING),
-	onPong: (callback: (data: any) => void) => {
-		const listener = (_event: Electron.IpcRendererEvent, data: any) => callback(data);
-		ipcRenderer.on(IPC_CHANNELS.PONG, listener);
-		return () => ipcRenderer.removeListener(IPC_CHANNELS.PONG, listener);
-	},
+// Expose the APIs
+contextBridge.exposeInMainWorld('electron', electronAPI);
+contextBridge.exposeInMainWorld('appConfig', appConfigAPI);
+contextBridge.exposeInMainWorld('testApi', testAPI);
 
-	// Goosed Management
-	startGoosed: (workingDir?: string) => ipcRenderer.invoke(IPC_CHANNELS.START_GOOSED, workingDir),
-	stopGoosed: () => ipcRenderer.invoke(IPC_CHANNELS.STOP_GOOSED),
-	checkGoosed: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_GOOSED)
-});
-
-// Also expose the config directly like in the original Goose implementation
-contextBridge.exposeInMainWorld('appConfig', {
-	get: (key: string) => config[key],
-	getAll: () => config
-});
+// Type declaration for TypeScript
+declare global {
+  interface Window {
+    appConfig: AppConfigAPI;
+    electron: ElectronAPI;
+    testApi: TestAPI;
+  }
+}
