@@ -2,7 +2,7 @@ import type { ChildProcessByStdio } from 'node:child_process';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { app, BrowserWindow } from 'electron';
-import { startGoosed } from '../../ipc/handlers/goosed';
+import { startGoosed } from '../../ipc_OLD/handlers/goosed_OLD';
 import { createWindow } from './utils_window';
 
 // These should be defined by Vite, but let's check if they exist
@@ -13,7 +13,7 @@ export const createChildWindow = async (): Promise<BrowserWindow> => {
 	const [window, _goosedProcess] = await createWindow({
 		title: 'Goose - Child Window'
 	});
-	
+
 	return window;
 };
 

@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import started from 'electron-squirrel-startup';
-import { registerIpcHandlers, removeIpcHandlers } from '../ipc/handlers';
+import { registerIpcHandlers, removeIpcHandlers } from '../ipc_OLD/handlers';
 import { createMainWindow } from './windows/createMainWindow';
 
 // Handle uncaught errors at the top level

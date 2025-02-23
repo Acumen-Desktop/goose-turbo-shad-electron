@@ -2,14 +2,14 @@ import type { ChildProcess } from 'child_process';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { BrowserWindow } from 'electron';
-import { startGoosed, setGoosedProcess } from '../handlers/goosed';
+import { startGoosed, setGoosedProcess } from '../handlers/goosed_OLD';
 
 export const createWindow = async (options: {
-    title: string;
-    x?: number;
-    y?: number;
-    width: number;
-    height: number;
+  title: string;
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
 }): Promise<[BrowserWindow, ChildProcess]> => {
   const [port, dir, goosedProcess] = await startGoosed();
 

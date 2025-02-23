@@ -1,5 +1,5 @@
 import { ipcMain, app } from 'electron';
-import { IPC_CHANNELS, GoosedResponse } from '../../ipc/types/interfaces';
+import { IPC_CHANNELS, GoosedResponse } from '../../ipc_OLD/types/interfaces';
 import type { ChildProcess, ChildProcessWithoutNullStreams } from 'child_process';
 import { spawn } from 'child_process';
 import path from 'path';
@@ -11,7 +11,7 @@ export const startGoosed = async (): Promise<[number, string, ChildProcessWithou
     // TODO: Get these from config/env
     const port = 49848;
     const workingDir: string = process.cwd();
-    
+
     // Fix path resolution for the goosed binary
     let goosedPath: string;
     if (app.isPackaged) {
@@ -23,7 +23,7 @@ export const startGoosed = async (): Promise<[number, string, ChildProcessWithou
     }
 
     console.log('Starting goosed from:', goosedPath);
-    
+
     const goosedProcess = spawn(goosedPath, ['--port', port.toString()], {
         cwd: workingDir
     });

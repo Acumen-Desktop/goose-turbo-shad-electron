@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { IPC_CHANNELS } from '../ipc/types/interfaces';
+import { IPC_CHANNELS } from '../ipc_OLD/types/interfaces';
 
 // Parse config from process arguments
 const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');

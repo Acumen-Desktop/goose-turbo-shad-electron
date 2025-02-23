@@ -27,7 +27,7 @@
  */
 
 import './index.css';
-import { IPC_CHANNELS } from '../ipc/types/interfaces';
+import { IPC_CHANNELS } from '../ipc_OLD/types/interfaces';
 
 // Get the window interface that was exposed by the preload script
 declare global {
@@ -64,9 +64,8 @@ startGoosedButton?.addEventListener('click', async () => {
 	try {
 		const result = await window.electron.startGoosed();
 		const currentContent = goosedStatusDiv.innerHTML;
-		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${
-			result.isRunning ? `Started on port ${result.port}` : `Failed: ${result.error}`
-		}\n`;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${result.isRunning ? `Started on port ${result.port}` : `Failed: ${result.error}`
+			}\n`;
 		updateButtonStates(result.isRunning);
 	} catch (error) {
 		const currentContent = goosedStatusDiv.innerHTML;
@@ -80,9 +79,8 @@ checkGoosedButton?.addEventListener('click', async () => {
 	const timestamp = new Date().toISOString();
 	try {
 		const status = await window.electron.checkGoosed();
-		goosedStatusDiv.innerHTML = `[${timestamp}] Status: ${
-			status.isRunning ? `Running on port ${status.port}` : 'Not running'
-		}\n`;
+		goosedStatusDiv.innerHTML = `[${timestamp}] Status: ${status.isRunning ? `Running on port ${status.port}` : 'Not running'
+			}\n`;
 		updateButtonStates(status.isRunning);
 	} catch (error) {
 		goosedStatusDiv.innerHTML = `[${timestamp}] Error checking status: ${error.message}\n`;
@@ -97,9 +95,8 @@ stopGoosedButton?.addEventListener('click', async () => {
 	try {
 		const result = await window.electron.stopGoosed();
 		const currentContent = goosedStatusDiv.innerHTML;
-		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${
-			result.isRunning ? `Failed: ${result.error}` : 'Stopped successfully'
-		}\n`;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${result.isRunning ? `Failed: ${result.error}` : 'Stopped successfully'
+			}\n`;
 		updateButtonStates(result.isRunning);
 	} catch (error) {
 		const currentContent = goosedStatusDiv.innerHTML;

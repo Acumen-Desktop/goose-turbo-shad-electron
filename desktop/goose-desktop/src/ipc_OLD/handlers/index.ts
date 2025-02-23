@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNELS } from '../types/interfaces';
-import { checkGoosed, startGoosed, stopGoosed } from './goosed';
+import { checkGoosed, startGoosed, stopGoosed } from './goosed_OLD';
 
 export const registerIpcHandlers = () => {
   console.log('Registering IPC handlers...');

@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import { registerIpcHandlers, removeIpcHandlers } from '../ipc/handlers';
+import { registerIpcHandlers, removeIpcHandlers } from '../ipc_OLD/handlers';
 
 export const setupErrorHandlers = () => {
   process.on('uncaughtException', (err) => {
@@ -35,13 +35,13 @@ export const setupWindowHandlers = (window: BrowserWindow) => {
 
 export const setupAppHandlers = () => {
   app.on('window-all-closed', () => app.quit());
-  
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       // We'll need to handle this differently since initializeApp won't be available here
       app.emit('ready');
     }
   });
-  
+
   app.on('will-quit', removeIpcHandlers);
 };

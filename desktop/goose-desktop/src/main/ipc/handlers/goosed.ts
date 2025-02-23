@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
-import { startGoosed, stopGoosed, checkGoosed } from '../../services/goosed';
-import { IPC_CHANNELS } from '../../../ipc/types/interfaces';
+import { startGoosed, stopGoosed, checkGoosed } from '../../services/goosed_OLD';
+import { IPC_CHANNELS } from '../../../ipc_OLD/types/interfaces';
 
 export const setupGoosedHandlers = () => {
     ipcMain.handle(IPC_CHANNELS.START_GOOSED, async () => {
