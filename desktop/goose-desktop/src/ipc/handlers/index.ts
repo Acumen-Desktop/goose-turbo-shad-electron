@@ -1,63 +1,48 @@
 import { ipcMain } from 'electron';
 import { IPC_CHANNELS } from '../types/interfaces';
-import { handleLogInfo, handleShowNotification } from './notifications';
-import { handlePing } from './pingPong';
-import {
-	handleCheckOllama,
-	handleFetchMetadata,
-	handleGetBinaryPath,
-	handleOpenInChrome,
-	handleReloadApp,
-	handleStartPowerSaveBlocker,
-	handleStopPowerSaveBlocker
-} from './system';
-import {
-	handleCreateChatWindow,
-	handleCreateWingToWingWindow,
-	handleDirectoryChooser,
-	handleHideWindow,
-	handleSelectFileOrDirectory
-} from './window';
+import { checkGoosed, startGoosed, stopGoosed } from './goosed';
 
-/**
- * Registers all IPC handlers
- */
 export const registerIpcHandlers = () => {
-	// Window Management
-	ipcMain.on(IPC_CHANNELS.CREATE_CHAT_WINDOW, handleCreateChatWindow);
-	ipcMain.on(IPC_CHANNELS.CREATE_WING_TO_WING_WINDOW, handleCreateWingToWingWindow);
-	ipcMain.on(IPC_CHANNELS.HIDE_WINDOW, handleHideWindow);
-	ipcMain.on(IPC_CHANNELS.DIRECTORY_CHOOSER, handleDirectoryChooser);
-	ipcMain.handle(IPC_CHANNELS.SELECT_FILE_OR_DIRECTORY, handleSelectFileOrDirectory);
+  console.log('Registering IPC handlers...');
 
-	// System Integration
-	ipcMain.on(IPC_CHANNELS.OPEN_IN_CHROME, handleOpenInChrome);
-	ipcMain.handle(IPC_CHANNELS.FETCH_METADATA, handleFetchMetadata);
-	ipcMain.on(IPC_CHANNELS.RELOAD_APP, handleReloadApp);
-	ipcMain.handle(IPC_CHANNELS.GET_BINARY_PATH, handleGetBinaryPath);
-	ipcMain.handle(IPC_CHANNELS.START_POWER_SAVE_BLOCKER, handleStartPowerSaveBlocker);
-	ipcMain.handle(IPC_CHANNELS.STOP_POWER_SAVE_BLOCKER, handleStopPowerSaveBlocker);
-	ipcMain.handle(IPC_CHANNELS.CHECK_OLLAMA, handleCheckOllama);
+  // Goosed Management
+  ipcMain.handle(IPC_CHANNELS.START_GOOSED, async (_event, workingDir?: string) => {
+    console.log('Handling START_GOOSED request');
+    try {
+      const [port] = await startGoosed(workingDir);
+      return { isRunning: true, port };
+    } catch (error) {
+      console.error('Failed to start goosed:', error);
+      return { isRunning: false, error: error.message };
+    }
+  });
 
-	// Notifications & Logging
-	ipcMain.on(IPC_CHANNELS.NOTIFY, handleShowNotification);
-	ipcMain.on(IPC_CHANNELS.LOG_INFO, handleLogInfo);
+  ipcMain.handle(IPC_CHANNELS.STOP_GOOSED, async () => {
+    console.log('Handling STOP_GOOSED request');
+    try {
+      await stopGoosed();
+      return { isRunning: false };
+    } catch (error) {
+      console.error('Failed to stop goosed:', error);
+      return { isRunning: true, error: error.message };
+    }
+  });
 
-	// Test Ping Pong
-	ipcMain.on(IPC_CHANNELS.PING, handlePing);
+  ipcMain.handle(IPC_CHANNELS.CHECK_GOOSED, () => {
+    console.log('Handling CHECK_GOOSED request');
+    const status = checkGoosed();
+    return {
+      isRunning: status.isRunning,
+      port: status.port
+    };
+  });
+
+  console.log('IPC handlers registered successfully');
 };
 
-/**
- * Removes all IPC handlers
- */
 export const removeIpcHandlers = () => {
-	// Window Management
-	ipcMain.removeHandler(IPC_CHANNELS.SELECT_FILE_OR_DIRECTORY);
-
-	// System Integration
-	ipcMain.removeHandler(IPC_CHANNELS.FETCH_METADATA);
-	ipcMain.removeHandler(IPC_CHANNELS.GET_BINARY_PATH);
-	ipcMain.removeHandler(IPC_CHANNELS.START_POWER_SAVE_BLOCKER);
-	ipcMain.removeHandler(IPC_CHANNELS.STOP_POWER_SAVE_BLOCKER);
-	ipcMain.removeHandler(IPC_CHANNELS.CHECK_OLLAMA);
+  console.log('Removing IPC handlers...');
+  ipcMain.removeHandler(IPC_CHANNELS.START_GOOSED);
+  ipcMain.removeHandler(IPC_CHANNELS.STOP_GOOSED);
+  ipcMain.removeHandler(IPC_CHANNELS.CHECK_GOOSED);
 };

@@ -11,7 +11,10 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				index: path.join(__dirname, 'src/renderer/index.html')
-			}
+			},
+			external: [
+				'electron-log'
+			]
 		}
 	},
 	resolve: {

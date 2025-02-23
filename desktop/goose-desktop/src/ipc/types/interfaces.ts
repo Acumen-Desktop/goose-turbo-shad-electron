@@ -86,6 +86,12 @@ export interface PongResponse {
 	app: string;
 }
 
+export interface GoosedResponse {
+	isRunning: boolean;
+	port?: number;
+	error?: string;
+}
+
 /**
  * IPC channel names
  */
@@ -120,7 +126,15 @@ export const IPC_CHANNELS = {
 
 	// Test Ping Pong
 	PING: 'app:ping',
-	PONG: 'app:pong'
+	PONG: 'app:pong',
+
+	// App Lifecycle
+	APP_READY: 'app:ready',
+
+	// Goosed Management
+	START_GOOSED: 'goosed:start',
+	STOP_GOOSED: 'goosed:stop',
+	CHECK_GOOSED: 'goosed:check'
 } as const;
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS];

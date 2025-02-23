@@ -1,8 +1,6 @@
 import { Notification } from 'electron';
 import type { NotificationData } from '../types/interfaces';
-import { createLogger } from '../utils/logger';
-
-const log = createLogger('notifications');
+import log from '../../utils/logger';
 
 /**
  * Shows a system notification

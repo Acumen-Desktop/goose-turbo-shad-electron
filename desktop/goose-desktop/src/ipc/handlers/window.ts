@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog } from 'electron';
 import { IPC_CHANNELS } from '../types/interfaces';
-import { addRecentDir } from '../utils/recentDirs';
+import { addRecentDir } from '../../utils/recentDirs';
 
 /**
  * Creates a new chat window

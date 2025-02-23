@@ -1,17 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from '../ipc/types/interfaces';
-import type { AppConfig, AppConfigAPI, ElectronAPI, PongResponse } from '../ipc/types/interfaces';
 
-// Parse configuration from process arguments
-const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}') as AppConfig;
+// Parse config from process arguments
+const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');
 
-// Expose app configuration API
-contextBridge.exposeInMainWorld('appConfig', {
-	get: (key: keyof AppConfig) => config[key],
-	getAll: () => config
-} as AppConfigAPI);
-
-// Expose electron API
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electron', {
 	// Configuration
 	getConfig: () => config,
@@ -53,9 +47,20 @@ contextBridge.exposeInMainWorld('electron', {
 
 	// Test Ping Pong
 	ping: () => ipcRenderer.send(IPC_CHANNELS.PING),
-	onPong: (callback: (data: PongResponse) => void) => {
-		const listener = (_event: Electron.IpcRendererEvent, data: PongResponse) => callback(data);
+	onPong: (callback: (data: any) => void) => {
+		const listener = (_event: Electron.IpcRendererEvent, data: any) => callback(data);
 		ipcRenderer.on(IPC_CHANNELS.PONG, listener);
 		return () => ipcRenderer.removeListener(IPC_CHANNELS.PONG, listener);
-	}
-} as ElectronAPI);
+	},
+
+	// Goosed Management
+	startGoosed: (workingDir?: string) => ipcRenderer.invoke(IPC_CHANNELS.START_GOOSED, workingDir),
+	stopGoosed: () => ipcRenderer.invoke(IPC_CHANNELS.STOP_GOOSED),
+	checkGoosed: () => ipcRenderer.invoke(IPC_CHANNELS.CHECK_GOOSED)
+});
+
+// Also expose the config directly like in the original Goose implementation
+contextBridge.exposeInMainWorld('appConfig', {
+	get: (key: string) => config[key],
+	getAll: () => config
+});

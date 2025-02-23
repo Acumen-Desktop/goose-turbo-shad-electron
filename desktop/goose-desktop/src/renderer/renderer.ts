@@ -27,6 +27,7 @@
  */
 
 import './index.css';
+import { IPC_CHANNELS } from '../ipc/types/interfaces';
 
 // Get the window interface that was exposed by the preload script
 declare global {
@@ -34,26 +35,85 @@ declare global {
 		electron: {
 			ping: () => void;
 			onPong: (callback: (data: any) => void) => () => void;
+			startGoosed: (
+				workingDir?: string
+			) => Promise<{ isRunning: boolean; port?: number; error?: string }>;
+			stopGoosed: () => Promise<{ isRunning: boolean; error?: string }>;
+			checkGoosed: () => Promise<{ isRunning: boolean; port?: number }>;
+			on: (channel: string, callback: (...args: any[]) => void) => void;
+			off: (channel: string, callback: (...args: any[]) => void) => void;
 		};
 	}
 }
 
-// Get DOM elements
-const pingButton = document.getElementById('pingButton') as HTMLButtonElement;
-const responseDiv = document.getElementById('response') as HTMLDivElement;
+// Get button elements
+const startGoosedButton = document.getElementById('startGoosed') as HTMLButtonElement;
+const stopGoosedButton = document.getElementById('stopGoosed') as HTMLButtonElement;
+const checkGoosedButton = document.getElementById('checkGoosed') as HTMLButtonElement;
+const goosedStatusDiv = document.getElementById('goosed-status') as HTMLDivElement;
 
-// Add click handler for the ping button
-pingButton?.addEventListener('click', () => {
-	responseDiv.textContent = 'Sending ping...';
-	window.electron.ping();
+const updateButtonStates = (isRunning: boolean) => {
+	startGoosedButton.disabled = isRunning;
+	stopGoosedButton.disabled = !isRunning;
+};
+
+// Add click handler for start goosed button
+startGoosedButton?.addEventListener('click', async () => {
+	const timestamp = new Date().toISOString();
+	goosedStatusDiv.innerHTML = `[${timestamp}] Starting goosed...\n`;
+	try {
+		const result = await window.electron.startGoosed();
+		const currentContent = goosedStatusDiv.innerHTML;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${
+			result.isRunning ? `Started on port ${result.port}` : `Failed: ${result.error}`
+		}\n`;
+		updateButtonStates(result.isRunning);
+	} catch (error) {
+		const currentContent = goosedStatusDiv.innerHTML;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] Error: ${error.message}\n`;
+		updateButtonStates(false);
+	}
 });
 
-// Set up the pong listener
-const cleanup = window.electron.onPong((data) => {
-	responseDiv.textContent = `Received: ${JSON.stringify(data, null, 2)}`;
+// Add click handler for check status button
+checkGoosedButton?.addEventListener('click', async () => {
+	const timestamp = new Date().toISOString();
+	try {
+		const status = await window.electron.checkGoosed();
+		goosedStatusDiv.innerHTML = `[${timestamp}] Status: ${
+			status.isRunning ? `Running on port ${status.port}` : 'Not running'
+		}\n`;
+		updateButtonStates(status.isRunning);
+	} catch (error) {
+		goosedStatusDiv.innerHTML = `[${timestamp}] Error checking status: ${error.message}\n`;
+		updateButtonStates(false);
+	}
 });
 
-// Clean up the listener when the window unloads
-window.addEventListener('unload', cleanup);
+// Add click handler for stop goosed button
+stopGoosedButton?.addEventListener('click', async () => {
+	const timestamp = new Date().toISOString();
+	goosedStatusDiv.innerHTML = `[${timestamp}] Stopping goosed...\n`;
+	try {
+		const result = await window.electron.stopGoosed();
+		const currentContent = goosedStatusDiv.innerHTML;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] ${
+			result.isRunning ? `Failed: ${result.error}` : 'Stopped successfully'
+		}\n`;
+		updateButtonStates(result.isRunning);
+	} catch (error) {
+		const currentContent = goosedStatusDiv.innerHTML;
+		goosedStatusDiv.innerHTML = `${currentContent}[${timestamp}] Error: ${error.message}\n`;
+		updateButtonStates(true);
+	}
+});
+
+// Check initial status
+window.electron.checkGoosed().then((status) => {
+	updateButtonStates(status.isRunning);
+}).catch((error) => {
+	console.error('Failed to check initial goosed status:', error);
+	updateButtonStates(false);
+});
 
 console.warn('👋 This message is being logged by "renderer.ts", included via Vite');

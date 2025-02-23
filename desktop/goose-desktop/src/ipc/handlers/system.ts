@@ -1,7 +1,7 @@
 import { exec as execCallback, spawn } from 'child_process';
 import { promisify } from 'util';
 import { app, powerSaveBlocker } from 'electron';
-import { getBinaryPath } from '../utils/binaryPath';
+import { getBinaryPath } from '../../utils/binaryPath';
 
 const exec = promisify(execCallback);
 
