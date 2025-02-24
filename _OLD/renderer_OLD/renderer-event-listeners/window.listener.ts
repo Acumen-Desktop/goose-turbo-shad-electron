@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
+import { IPC } from '../../ipc-channels';
 
 type ErrorCallback = (error: string) => void;
 type ExtensionCallback = (url: string) => void;

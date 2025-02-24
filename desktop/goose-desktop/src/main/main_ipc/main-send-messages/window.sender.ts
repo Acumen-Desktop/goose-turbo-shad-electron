@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
+import { IPC } from '../ipc-channels';
 import log from '../../../utils/logger';
 
 export function sendFatalError(error: Error): void {

@@ -1,9 +1,9 @@
-import { ipcMain } from 'electron';
+import { ipcMain, BrowserWindow } from 'electron';
 import { spawn } from 'child_process';
-import { IPC } from '../../shared/ipc-channels';
+import { IPC } from '../ipc-channels';
 import log from '../../../utils/logger';
 
-export function registerBrowserListeners(): void {
+export function registerBrowserListeners(mainWindow?: BrowserWindow): void {
   ipcMain.on(IPC.BROWSER.OPEN_CHROME, (_, url: string) => {
     try {
       if (process.platform === 'darwin') {

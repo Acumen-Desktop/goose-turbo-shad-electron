@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
+import { IPC } from '../../ipc-channels';
 
 export async function checkOllama(): Promise<boolean> {
   return await ipcRenderer.invoke(IPC.SYSTEM.CHECK_OLLAMA);

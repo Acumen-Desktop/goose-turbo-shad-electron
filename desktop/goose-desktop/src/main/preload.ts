@@ -1,4 +1,5 @@
 import Electron, { contextBridge, ipcRenderer } from 'electron';
+import { IPC } from './main_ipc/ipc-channels';
 
 const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');
 

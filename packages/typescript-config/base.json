@@ -37,6 +37,9 @@
 	},
 	"exclude": [
 		"node_modules",
-		"goose-original"
+		"goose-original",
+		"**/*_OLD*",
+		"**/_OLD/**",
+		"/Volumes/Data/Software/2025/AI/AgenticAI/Goose/goose_turbo_shad_electron/_OLD/**"
 	]
 }

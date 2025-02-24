@@ -1,6 +1,6 @@
 import { ipcMain, app, Notification } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
-import { ChatWindowOptions, NotificationData } from '../../shared/types';
+import { IPC } from '../ipc-channels';
+import { ChatWindowOptions, NotificationData } from '../types';
 import { createChat } from '../../../main/chat';
 import { openDirectoryDialog } from '../../../main/directory';
 import log from '../../../utils/logger';

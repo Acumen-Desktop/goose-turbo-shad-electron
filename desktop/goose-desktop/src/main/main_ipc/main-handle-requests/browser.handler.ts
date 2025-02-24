@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
-import { MetadataResponse } from '../../shared/types';
+import { IPC } from '../ipc-channels';
+import { MetadataResponse } from '../types';
 import log from '../../../utils/logger';
 
 export function registerBrowserHandlers(): void {

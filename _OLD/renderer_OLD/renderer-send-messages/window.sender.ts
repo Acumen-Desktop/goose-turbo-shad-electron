@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
-import { ChatWindowOptions, NotificationData } from '../../shared/types';
+import { IPC } from '../../ipc-channels';
+import { ChatWindowOptions, NotificationData } from '../../types';
 
 export function hideWindow(): void {
   ipcRenderer.send(IPC.WINDOW.HIDE);

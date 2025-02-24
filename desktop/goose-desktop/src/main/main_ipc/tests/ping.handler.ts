@@ -1,6 +1,6 @@
 // tests/main-handle-requests/ping.handler.ts
 import { ipcMain } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
+import { IPC } from '../ipc-channels';
 
 export function setupPingHandler() {
     ipcMain.handle(IPC.TEST.PING, async () => {

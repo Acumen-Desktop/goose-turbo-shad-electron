@@ -1,5 +1,5 @@
-import { ipcMain, powerSaveBlocker } from 'electron';
-import { IPC } from '../../shared/ipc-channels';
+import {app, ipcMain, powerSaveBlocker } from 'electron';
+import { IPC } from '../ipc-channels';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { getBinaryPath } from '../../../utils/binaryPath';
@@ -9,7 +9,8 @@ const execAsync = promisify(exec);
 
 let powerSaveBlockerId: number | null = null;
 
-export function registerSystemHandlers(app: Electron.App): void {
+// export function registerSystemHandlers(app: Electron.App): void {
+export function registerSystemHandlers(): void {
   // Check Ollama process
   ipcMain.handle(IPC.SYSTEM.CHECK_OLLAMA, async () => {
     try {
