@@ -4,9 +4,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { getBinaryPath } from '../../utils/binaryPath';
 import log from '../../utils/logger';
-import { ChildProcessByStdio } from 'node:child_process';
-import { Readable } from 'node:stream';
-import setupLogFiles from '../../utils/setupLogFiles';
+// import { ChildProcessByStdio } from 'node:child_process';
+// import { Readable } from 'node:stream';
+// import setupLogFiles from '../../utils/setupLogFiles';
 
 // Find an available port to start goosed on
 export const findAvailablePort = (): Promise<number> => {
@@ -145,12 +145,12 @@ export const startGoosed = async (
     goosedProcess.unref();
   }
 
-  const { stdoutStream, stderrStream } = setupLogFiles(port, dir);
+  // const { stdoutStream, stderrStream } = setupLogFiles(port, dir);
 
   if (goosedProcess.stdout) {
     goosedProcess.stdout.on('data', (data: Buffer) => {
       const timestamp = new Date().toISOString();
-      stdoutStream.write(`[${timestamp}] ${data.toString()}`);
+      // stdoutStream.write(`[${timestamp}] ${data.toString()}`);
       // log.info(`goosed stdout for port ${port} and dir ${dir}: ${data.toString()}`);
     });
   }
@@ -158,14 +158,14 @@ export const startGoosed = async (
   if (goosedProcess.stderr) {
     goosedProcess.stderr.on('data', (data: Buffer) => {
       const timestamp = new Date().toISOString();
-      stderrStream.write(`[${timestamp}] ${data.toString()}`);
+      // stderrStream.write(`[${timestamp}] ${data.toString()}`);
       // log.error(`goosed stderr for port ${port} and dir ${dir}: ${data.toString()}`);
     });
   }
 
   goosedProcess.on('close', (code) => {
-    stdoutStream.end();
-    stderrStream.end();
+    // stdoutStream.end();
+    // stderrStream.end();
     log.info(`goosed process exited with code ${code} for port ${port} and dir ${dir}`);
   });
 
@@ -202,8 +202,8 @@ export const startGoosed = async (
         spawn('taskkill', ['/pid', goosedProcess.pid.toString(), '/T', '/F']);
       } else {
         goosedProcess.kill();
-        stdoutStream.end();
-        stderrStream.end();
+        // stdoutStream.end();
+        // stderrStream.end();
       }
     } catch (error) {
       log.error('Error while terminating goosed process:', error);

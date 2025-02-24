@@ -1,3 +1,0 @@
-[2025-02-24T20:05:10.608Z]   [2m2025-02-24T20:05:10.583505Z[0m [32m INFO[0m [1;32mgoosed::commands::agent[0m[32m: [32mlistening on 127.0.0.1:52147[0m
-    [2;3mat[0m crates/goose-server/src/commands/agent.rs:31
-
