@@ -1,141 +1,155 @@
-/**
- * This file will automatically be loaded by vite and run in the "renderer" context.
- * To learn more about the differences between the "main" and the "renderer" context in
- * Electron, visit:
- *
- * https://electronjs.org/docs/tutorial/process-model
- *
- * By default, Node.js integration in this file is disabled. When enabling Node.js integration
- * in a renderer process, please be aware of potential security implications. You can read
- * more about security risks here:
- *
- * https://electronjs.org/docs/tutorial/security
- *
- * To enable Node.js integration in this file, open up `main.ts` and enable the `nodeIntegration`
- * flag:
- *
- * ```
- *  // Create the browser window.
- *  mainWindow = new BrowserWindow({
- *    width: 800,
- *    height: 600,
- *    webPreferences: {
- *      nodeIntegration: true
- *    }
- *  });
- * ```
- */
-
 import './index.css';
-
-// Get the window interface that was exposed by the preload script
-declare global {
-  interface Window {
-    electron: {
-      ping: () => void;
-      onPong: (callback: (data: { message: string; timestamp: string }) => void) => () => void;
-      // Commenting out goosed interfaces until implemented
-      /*
-      startGoosed: (
-        workingDir?: string
-      ) => Promise<{ isRunning: boolean; port?: number; error?: string }>;
-      stopGoosed: () => Promise<{ isRunning: boolean; error?: string }>;
-      checkGoosed: () => Promise<{ isRunning: boolean; port?: number }>;
-      */
-    };
-  }
-}
 
 // Get button elements
 const pingButton = document.getElementById('pingButton') as HTMLButtonElement;
 const responseDiv = document.getElementById('response') as HTMLDivElement;
-/* Commenting out goosed elements until implemented
 const startGoosedButton = document.getElementById('startGoosed') as HTMLButtonElement;
 const stopGoosedButton = document.getElementById('stopGoosed') as HTMLButtonElement;
 const checkGoosedButton = document.getElementById('checkGoosed') as HTMLButtonElement;
 const goosedStatusDiv = document.getElementById('goosed-status') as HTMLDivElement;
-*/
 
 // Add click handler for ping button
 pingButton?.addEventListener('click', () => {
   const timestamp = new Date().toISOString();
   responseDiv.innerHTML = `[${timestamp}] Sending ping...\n`;
-  window.electron.ping();
+  window.testApi.sendPing().then((response) => {
+    responseDiv.innerHTML += `[${response.timestamp}] Received: ${response.message}\n`;;
+  }).catch((error) => {
+    responseDiv.innerHTML += `[${new Date().toISOString()}] Error: ${error}\n`;
+  });
 });
 
-// Listen for pong responses
-window.electron.onPong((data) => {
-  responseDiv.innerHTML += `[${data.timestamp}] Received: ${data.message}\n`;
-});
 
-/* Commenting out goosed functionality until implemented
+
+// Track the current Goosed port
+let currentGoosedPort: number | null = null;
+
+// Function to update status display with timestamp
+function updateStatus(message: string, append: boolean = false) {
+  const timestamp = new Date().toISOString();
+  if (append) {
+    goosedStatusDiv.innerHTML += `[${timestamp}] ${message}\n`;
+  } else {
+    goosedStatusDiv.innerHTML = `[${timestamp}] ${message}\n`;
+  }
+}
+
 // Function to update button states based on goosed running status
 function updateButtonStates(isRunning: boolean) {
   startGoosedButton.disabled = isRunning;
   stopGoosedButton.disabled = !isRunning;
 }
 
-// Add click handler for start goosed button
-startGoosedButton?.addEventListener('click', async () => {
-  const timestamp = new Date().toISOString();
-  goosedStatusDiv.innerHTML = `[${timestamp}] Starting goosed...\n`;
-  
+// Function to handle Goosed status updates
+async function checkGoosedStatus(showMessage: boolean = true) {
   try {
-    const result = await window.electron.startGoosed();
-    if (result.error) {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Error: ${result.error}\n`;
+    if (showMessage) {
+      updateStatus('Checking Goosed status...');
+    }
+    const result = await window.electronApi.checkGoosed();
+    if (result.isRunning) {
+      currentGoosedPort = result.port;
+      if (showMessage) {
+        updateStatus(`Goosed is running on port ${result.port}`, true);
+      }
     } else {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Goosed running on port ${result.port}\n`;
+      currentGoosedPort = null;
+      if (showMessage) {
+        updateStatus('Goosed is not running', true);
+      }
     }
     updateButtonStates(result.isRunning);
+    return result;
   } catch (error) {
-    goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Error: ${error}\n`;
+    if (showMessage) {
+      updateStatus(`Error checking status: ${error}`, true);
+    }
+    updateButtonStates(false);
+    return { isRunning: false };
+  }
+}
+
+// Add click handler for start goosed button
+startGoosedButton?.addEventListener('click', async () => {
+  updateStatus('Starting Goosed...');
+  
+  try {
+    await window.electronApi.startPowerSaveBlocker();
+    const result = await window.electronApi.startGoosed();
+    if (result.error) {
+      updateStatus(`Error: ${result.error}`, true);
+      currentGoosedPort = null;
+    } else {
+      currentGoosedPort = result.port;
+      updateStatus(`Goosed running on port ${result.port}`, true);
+    }
+    updateButtonStates(!result.error);
+    // Check status after starting to ensure everything is running
+    await checkGoosedStatus(false);
+  } catch (error) {
+    updateStatus(`Error: ${error}`, true);
+    updateButtonStates(false);
   }
 });
 
 // Add click handler for stop goosed button
 stopGoosedButton?.addEventListener('click', async () => {
-  const timestamp = new Date().toISOString();
-  goosedStatusDiv.innerHTML = `[${timestamp}] Stopping goosed...\n`;
+  updateStatus('Stopping Goosed...');
   
   try {
-    const result = await window.electron.stopGoosed();
+    await window.electronApi.stopPowerSaveBlocker();
+    if (!currentGoosedPort) {
+      updateStatus('Error: No active Goosed server to stop', true);
+      return;
+    }
+    const result = await window.electronApi.stopGoosed(currentGoosedPort);
     if (result.error) {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Error: ${result.error}\n`;
+      updateStatus(`Error: ${result.error}`, true);
     } else {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Goosed stopped\n`;
+      updateStatus(`Goosed stopped on port ${currentGoosedPort}`, true);
+      currentGoosedPort = null;
     }
     updateButtonStates(result.isRunning);
+    // Verify the status after stopping
+    await checkGoosedStatus(false);
   } catch (error) {
-    goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Error: ${error}\n`;
+    updateStatus(`Error: ${error}`, true);
+    updateButtonStates(false);
   }
 });
 
 // Add click handler for check goosed button
 checkGoosedButton?.addEventListener('click', async () => {
-  const timestamp = new Date().toISOString();
-  goosedStatusDiv.innerHTML = `[${timestamp}] Checking goosed status...\n`;
+  updateStatus('Checking goosed status...');
   
   try {
-    const result = await window.electron.checkGoosed();
+    const result = await window.electronApi.checkGoosed();
     if (result.isRunning) {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Goosed is running on port ${result.port}\n`;
+      updateStatus(`Goosed is running on port ${result.port}`, true);
     } else {
-      goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Goosed is not running\n`;
+      updateStatus('Goosed is not running', true);
     }
     updateButtonStates(result.isRunning);
   } catch (error) {
-    goosedStatusDiv.innerHTML += `[${new Date().toISOString()}] Error: ${error}\n`;
+    updateStatus(`Error: ${error}`, true);
   }
 });
 
 // Check initial status
-window.electron.checkGoosed().then((status) => {
+window.electronApi.checkGoosed().then((status) => {
+  if (status.isRunning) {
+    updateStatus(`Goosed is running on port ${status.port}`, true);
+    currentGoosedPort = status.port;
+  } else {
+    updateStatus('Goosed is not running', true);
+    currentGoosedPort = null;
+  }
   updateButtonStates(status.isRunning);
 }).catch((error) => {
   console.error('Failed to check initial goosed status:', error);
+  updateStatus(`Error checking status: ${error}`, true);
   updateButtonStates(false);
 });
-*/
+
 
 console.warn('👋 This message is being logged by "renderer.ts", included via Vite');

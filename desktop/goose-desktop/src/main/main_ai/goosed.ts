@@ -2,10 +2,11 @@ import { spawn } from 'child_process';
 import { createServer } from 'net';
 import os from 'node:os';
 import path from 'node:path';
-import { getBinaryPath } from './utils/binaryPath';
-import log from './utils/logger';
+import { getBinaryPath } from '../../utils/binaryPath';
+import log from '../../utils/logger';
 import { ChildProcessByStdio } from 'node:child_process';
 import { Readable } from 'node:stream';
+import setupLogFiles from '../../utils/setupLogFiles';
 
 // Find an available port to start goosed on
 export const findAvailablePort = (): Promise<number> => {
@@ -24,7 +25,7 @@ export const findAvailablePort = (): Promise<number> => {
 
 // Goose process manager. Take in the app, port, and directory to start goosed in.
 // Check if goosed server is ready by polling the status endpoint
-const checkServerStatus = async (
+export const checkServerStatus = async (
   port: number,
   maxAttempts: number = 60,
   interval: number = 100
@@ -51,10 +52,10 @@ const checkServerStatus = async (
 };
 
 export const startGoosed = async (
-  app,
-  dir = null,
-  env = {}
-): Promise<[number, string, ChildProcessByStdio<null, Readable, Readable>]> => {
+  app: Electron.App,
+  dir: string | null = null,
+  env: Record<string, string> = {}
+): Promise<[number, string, import('child_process').ChildProcess]> => {
   // we default to running goosed in home dir - if not specified
   const homeDir = os.homedir();
   const isWindows = process.platform === 'win32';
@@ -94,6 +95,7 @@ export const startGoosed = async (
   const processEnv = { ...process.env, ...additionalEnv };
 
   // Add detailed logging for troubleshooting
+  /*
   log.info(`Process platform: ${process.platform}`);
   log.info(`Process cwd: ${process.cwd()}`);
   log.info(`Target working directory: ${dir}`);
@@ -102,24 +104,25 @@ export const startGoosed = async (
   log.info(`Environment APPDATA: ${processEnv.APPDATA}`);
   log.info(`Environment LOCALAPPDATA: ${processEnv.LOCALAPPDATA}`);
   log.info(`Environment PATH: ${processEnv.PATH}`);
+  */
 
   // Ensure proper executable path on Windows
   if (isWindows && !goosedPath.toLowerCase().endsWith('.exe')) {
     goosedPath += '.exe';
   }
-  log.info(`Binary path resolved to: ${goosedPath}`);
+  // log.info(`Binary path resolved to: ${goosedPath}`);
 
   // Verify binary exists
   try {
     const fs = require('fs');
     const stats = fs.statSync(goosedPath);
-    log.info(`Binary exists: ${stats.isFile()}`);
+    // log.info(`Binary exists: ${stats.isFile()}`);
   } catch (error) {
     log.error(`Binary not found at ${goosedPath}:`, error);
     throw new Error(`Binary not found at ${goosedPath}`);
   }
 
-  const spawnOptions = {
+  const spawnOptions: import('child_process').SpawnOptions = {
     cwd: dir,
     env: processEnv,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -132,7 +135,7 @@ export const startGoosed = async (
   };
 
   // Log spawn options for debugging
-  log.info('Spawn options:', JSON.stringify(spawnOptions, null, 2));
+  // log.info('Spawn options:', JSON.stringify(spawnOptions, null, 2));
 
   // Spawn the goosed process
   const goosedProcess = spawn(goosedPath, ['agent'], spawnOptions);
@@ -142,15 +145,27 @@ export const startGoosed = async (
     goosedProcess.unref();
   }
 
-  goosedProcess.stdout.on('data', (data) => {
-    log.info(`goosed stdout for port ${port} and dir ${dir}: ${data.toString()}`);
-  });
+  const { stdoutStream, stderrStream } = setupLogFiles(port, dir);
 
-  goosedProcess.stderr.on('data', (data) => {
-    log.error(`goosed stderr for port ${port} and dir ${dir}: ${data.toString()}`);
-  });
+  if (goosedProcess.stdout) {
+    goosedProcess.stdout.on('data', (data: Buffer) => {
+      const timestamp = new Date().toISOString();
+      stdoutStream.write(`[${timestamp}] ${data.toString()}`);
+      // log.info(`goosed stdout for port ${port} and dir ${dir}: ${data.toString()}`);
+    });
+  }
+
+  if (goosedProcess.stderr) {
+    goosedProcess.stderr.on('data', (data: Buffer) => {
+      const timestamp = new Date().toISOString();
+      stderrStream.write(`[${timestamp}] ${data.toString()}`);
+      // log.error(`goosed stderr for port ${port} and dir ${dir}: ${data.toString()}`);
+    });
+  }
 
   goosedProcess.on('close', (code) => {
+    stdoutStream.end();
+    stderrStream.end();
     log.info(`goosed process exited with code ${code} for port ${port} and dir ${dir}`);
   });
 
@@ -163,7 +178,7 @@ export const startGoosed = async (
   const isReady = await checkServerStatus(port);
   log.info(`Goosed isReady ${isReady}`);
   if (!isReady) {
-    log.error(`Goosed server failed to start on port ${port}`);
+    log.error(`Line 166 - goosed.ts - startGoosed - Goosed server failed to start on port ${port}`);
     try {
       if (isWindows) {
         // On Windows, use taskkill to forcefully terminate the process tree
@@ -187,6 +202,8 @@ export const startGoosed = async (
         spawn('taskkill', ['/pid', goosedProcess.pid.toString(), '/T', '/F']);
       } else {
         goosedProcess.kill();
+        stdoutStream.end();
+        stderrStream.end();
       }
     } catch (error) {
       log.error('Error while terminating goosed process:', error);

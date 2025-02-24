@@ -17,6 +17,9 @@ type ElectronAPI = {
   checkForOllama: () => Promise<boolean>;
   selectFileOrDirectory: () => Promise<string>;
   startPowerSaveBlocker: () => Promise<number>;
+  checkGoosed: () => Promise<any>;
+  startGoosed: () => Promise<any>;
+  stopGoosed: (port: number) => Promise<any>;
   stopPowerSaveBlocker: () => Promise<void>;
   getBinaryPath: (binaryName: string) => Promise<string>;
   on: (
@@ -54,6 +57,9 @@ const electronAPI: ElectronAPI = {
   selectFileOrDirectory: () => ipcRenderer.invoke('select-file-or-directory'),
   startPowerSaveBlocker: () => ipcRenderer.invoke('start-power-save-blocker'),
   stopPowerSaveBlocker: () => ipcRenderer.invoke('stop-power-save-blocker'),
+  startGoosed: () => ipcRenderer.invoke(IPC.SYSTEM.START_GOOSED),
+  stopGoosed: (port: number) => ipcRenderer.invoke(IPC.SYSTEM.STOP_GOOSED, port),
+  checkGoosed: () => ipcRenderer.invoke(IPC.SYSTEM.CHECK_GOOSED),
   getBinaryPath: (binaryName: string) => ipcRenderer.invoke('get-binary-path', binaryName),
   on: (channel: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => {
     ipcRenderer.on(channel, callback);
@@ -72,21 +78,19 @@ const appConfigAPI: AppConfigAPI = {
 };
 
 const testAPI = {
-
   sendPing: () => ipcRenderer.invoke(IPC.TEST.PING),
-
 }
 
 // Expose the APIs
-contextBridge.exposeInMainWorld('electron', electronAPI);
-contextBridge.exposeInMainWorld('appConfig', appConfigAPI);
+contextBridge.exposeInMainWorld('electronApi', electronAPI);
+contextBridge.exposeInMainWorld('appConfigApi', appConfigAPI);
 contextBridge.exposeInMainWorld('testApi', testAPI);
 
 // Type declaration for TypeScript
 declare global {
   interface Window {
-    appConfig: AppConfigAPI;
-    electron: ElectronAPI;
+    appConfigApi: AppConfigAPI;
+    electronApi: ElectronAPI;
     testApi: TestAPI;
   }
 }

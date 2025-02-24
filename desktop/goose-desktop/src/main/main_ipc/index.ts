@@ -14,7 +14,7 @@ export const ipcMainCode = {
   handlers: {
     browser: () => registerBrowserHandlers(),
     fileSystem: () => registerFileSystemHandlers(),
-    system: () => registerSystemHandlers()
+    system: (app: Electron.App) => registerSystemHandlers(app)
   },
   messages: {
     sendFatalError,

@@ -12,7 +12,7 @@ import {
   Tray,
 } from 'electron';
 import path from 'node:path';
-import { startGoosed } from '../../goosed';
+import { startGoosed } from '../main_ai/goosed';
 import { getBinaryPath } from '../../utils/binaryPath';
 import { loadShellEnv } from '../../utils/loadEnv';
 import log from '../../utils/logger';

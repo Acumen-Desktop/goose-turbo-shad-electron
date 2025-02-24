@@ -15,6 +15,9 @@ export const IPC = {
       START: 'start-power-save-blocker',
       STOP: 'stop-power-save-blocker',
     },
+    CHECK_GOOSED: 'goose:status',
+    START_GOOSED: 'goose:start',
+    STOP_GOOSED: 'goose:stop',
   },
   NOTIFICATION: {
     SHOW: 'notify',

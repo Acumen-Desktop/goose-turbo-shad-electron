@@ -1,17 +1,17 @@
-import type { ChildProcess } from 'child_process';
+// import type { ChildProcess } from 'child_process';
 import path from 'node:path';
-import type { Readable } from 'node:stream';
+// import type { Readable } from 'node:stream';
 import { BrowserWindow } from 'electron';
-import { startGoosed, setGoosedProcess } from '../handlers/goosed_OLD';
+// import { startGoosed, setGoosedProcess } from '../handlers/goosed_OLD';
 
 export const createWindow = async (options: {
   title: string;
   x?: number;
   y?: number;
-  width: number;
-  height: number;
-}): Promise<[BrowserWindow, ChildProcess]> => {
-  const [port, dir, goosedProcess] = await startGoosed();
+  width?: number;
+  height?: number;
+}): Promise<[BrowserWindow]> => {
+  // const [port, dir, goosedProcess] = await startGoosed();
 
   const window = new BrowserWindow({
     x: options.x ?? 2048,
@@ -22,19 +22,19 @@ export const createWindow = async (options: {
     backgroundColor: '#000',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      additionalArguments: [
-        JSON.stringify({
-          GOOSE_PORT: port,
-          GOOSE_WORKING_DIR: dir
-        })
-      ]
+      // additionalArguments: [
+      //   JSON.stringify({
+      //     GOOSE_PORT: port,
+      //     GOOSE_WORKING_DIR: dir
+      //   })
+      // ]
     }
   });
 
   window.on('closed', () => {
-    if (goosedProcess) {
-      goosedProcess.kill();
-    }
+    // if (goosedProcess) {
+    //   goosedProcess.kill();
+    // }
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -45,19 +45,20 @@ export const createWindow = async (options: {
 
   window.webContents.openDevTools();
 
-  setGoosedProcess(goosedProcess);
+  // setGoosedProcess(goosedProcess);
 
-  return [window, goosedProcess];
+  // return [window, goosedProcess];
+  return [window];
 }
 
-export async function handleWindowLoadError(
-  window: BrowserWindow,
-  err: Error,
-  appUrl: string | undefined
-): Promise<void> {
-  // ... existing error handling code ...
-}
+// export async function handleWindowLoadError(
+//   window: BrowserWindow,
+//   err: Error,
+//   appUrl: string | undefined
+// ): Promise<void> {
+//   // ... existing error handling code ...
+// }
 
-export function setupWindowLogging(window: BrowserWindow): void {
-  // ... existing logging code ...
-}
+// export function setupWindowLogging(window: BrowserWindow): void {
+//   // ... existing logging code ...
+// }

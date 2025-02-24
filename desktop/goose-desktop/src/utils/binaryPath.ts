@@ -34,13 +34,13 @@ export const getBinaryPath = (app: Electron.App, binaryName: string): string => 
   }
 
   // Log all paths we're checking
-  log.info('Checking binary paths:', possiblePaths);
+  // log.info('Checking binary paths:', possiblePaths);
 
   // Try each path and return the first one that exists
   for (const binPath of possiblePaths) {
     try {
       if (fs.existsSync(binPath)) {
-        log.info(`Found binary at: ${binPath}`);
+        // log.info(`Found binary at: ${binPath}`);
         return binPath;
       }
     } catch (error) {
