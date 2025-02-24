@@ -17,8 +17,7 @@ const initializeApp = async (): Promise<void> => {
   		// ipcMainCode.listeners.browser(mainWindow);
 		// ipcMainCode.listeners.extension();
 		// ipcMainCode.handlers.browser();
-		// ipcMainCode.handlers.fileSystem();
-		// ipcMainCode.handlers.system();
+		ipcMainCode.handlers.fileSystem();
 
 		const cleanupSystemHandlers = ipcMainCode.handlers.system(app);
 		const cleanupPingHandler = setupPingHandler(app);

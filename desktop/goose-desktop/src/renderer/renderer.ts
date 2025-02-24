@@ -1,4 +1,5 @@
 import './index.css';
+import type { IpcRendererEvent } from 'electron';
 
 // Get button elements
 const pingButton = document.getElementById('pingButton') as HTMLButtonElement;
@@ -8,24 +9,67 @@ const stopGoosedButton = document.getElementById('stopGoosed') as HTMLButtonElem
 const checkGoosedButton = document.getElementById('checkGoosed') as HTMLButtonElement;
 const goosedStatusDiv = document.getElementById('goosed-status') as HTMLDivElement;
 
+// Get file system elements
+const selectFileOrDirButton = document.getElementById('selectFileOrDir') as HTMLButtonElement;
+const selectDirButton = document.getElementById('selectDir') as HTMLButtonElement;
+const fileSystemResultDiv = document.getElementById('file-system-result') as HTMLDivElement;
+
 // Add click handler for ping button
 pingButton?.addEventListener('click', () => {
   const timestamp = new Date().toISOString();
   responseDiv.innerHTML = `[${timestamp}] Sending ping...\n`;
-  window.testApi.sendPing().then((response) => {
-    responseDiv.innerHTML += `[${response.timestamp}] Received: ${response.message}\n`;;
-  }).catch((error) => {
+  window.testApi.sendPing().then((response: { timestamp: string; message: string }) => {
+    responseDiv.innerHTML += `[${response.timestamp}] Received: ${response.message}\n`;
+  }).catch((error: Error) => {
     responseDiv.innerHTML += `[${new Date().toISOString()}] Error: ${error}\n`;
   });
 });
 
+// Function to update file system result with timestamp
+function updateFileSystemResult(message: string, append: boolean = false): void {
+  const timestamp = new Date().toISOString();
+  if (append) {
+    fileSystemResultDiv.innerHTML += `[${timestamp}] ${message}\n`;
+  } else {
+    fileSystemResultDiv.innerHTML = `[${timestamp}] ${message}\n`;
+  }
+}
 
+// Add click handler for select file/directory button
+selectFileOrDirButton?.addEventListener('click', async () => {
+  updateFileSystemResult('Opening file/directory selector...');
+  try {
+    const path = await window.electronApi.selectFileOrDirectory();
+    if (path) {
+      updateFileSystemResult(`Selected: ${path}`, true);
+    } else {
+      updateFileSystemResult('Selection cancelled', true);
+    }
+  } catch (error) {
+    updateFileSystemResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
+// Add click handler for select directory button
+selectDirButton?.addEventListener('click', async () => {
+  updateFileSystemResult('Opening directory selector...');
+  try {
+    const path = await window.electronApi.directoryChooser();
+    if (path) {
+      updateFileSystemResult(`Selected directory: ${path}`, true);
+    } else {
+      updateFileSystemResult('Selection cancelled', true);
+    }
+  } catch (error) {
+    updateFileSystemResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
 
 // Track the current Goosed port
 let currentGoosedPort: number | null = null;
 
 // Function to update status display with timestamp
-function updateStatus(message: string, append: boolean = false) {
+function updateStatus(message: string, append: boolean = false): void {
   const timestamp = new Date().toISOString();
   if (append) {
     goosedStatusDiv.innerHTML += `[${timestamp}] ${message}\n`;
@@ -35,13 +79,18 @@ function updateStatus(message: string, append: boolean = false) {
 }
 
 // Function to update button states based on goosed running status
-function updateButtonStates(isRunning: boolean) {
+function updateButtonStates(isRunning: boolean): void {
   startGoosedButton.disabled = isRunning;
   stopGoosedButton.disabled = !isRunning;
 }
 
+interface GoosedStatus {
+  isRunning: boolean;
+  port?: number;
+}
+
 // Function to handle Goosed status updates
-async function checkGoosedStatus(showMessage: boolean = true) {
+async function checkGoosedStatus(showMessage: boolean = true): Promise<GoosedStatus> {
   try {
     if (showMessage) {
       updateStatus('Checking Goosed status...');
@@ -62,7 +111,7 @@ async function checkGoosedStatus(showMessage: boolean = true) {
     return result;
   } catch (error) {
     if (showMessage) {
-      updateStatus(`Error checking status: ${error}`, true);
+      updateStatus(`Error checking status: ${error instanceof Error ? error.message : String(error)}`, true);
     }
     updateButtonStates(false);
     return { isRunning: false };
@@ -87,7 +136,7 @@ startGoosedButton?.addEventListener('click', async () => {
     // Check status after starting to ensure everything is running
     await checkGoosedStatus(false);
   } catch (error) {
-    updateStatus(`Error: ${error}`, true);
+    updateStatus(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
     updateButtonStates(false);
   }
 });
@@ -113,7 +162,7 @@ stopGoosedButton?.addEventListener('click', async () => {
     // Verify the status after stopping
     await checkGoosedStatus(false);
   } catch (error) {
-    updateStatus(`Error: ${error}`, true);
+    updateStatus(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
     updateButtonStates(false);
   }
 });
@@ -131,27 +180,26 @@ checkGoosedButton?.addEventListener('click', async () => {
     }
     updateButtonStates(result.isRunning);
   } catch (error) {
-    updateStatus(`Error: ${error}`, true);
+    updateStatus(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
   }
 });
 
 // Check initial status
 setTimeout(() => {
-window.electronApi.checkGoosed().then((status) => {
-  if (status.isRunning) {
-    updateStatus(`Goosed is running on port ${status.port}`, true);
-    currentGoosedPort = status.port;
-  } else {
-    updateStatus('Goosed is not running', true);
-    currentGoosedPort = null;
-  }
-  updateButtonStates(status.isRunning);
-}).catch((error) => {
-  console.error('Failed to check initial goosed status:', error);
-  updateStatus(`Error checking status: ${error}`, true);
-  updateButtonStates(false);
-});
+  window.electronApi.checkGoosed().then((status: GoosedStatus) => {
+    if (status.isRunning) {
+      updateStatus(`Goosed is running on port ${status.port}`, true);
+      currentGoosedPort = status.port;
+    } else {
+      updateStatus('Goosed is not running', true);
+      currentGoosedPort = null;
+    }
+    updateButtonStates(status.isRunning);
+  }).catch((error: Error) => {
+    console.error('Failed to check initial goosed status:', error);
+    updateStatus(`Error checking status: ${error.message}`, true);
+    updateButtonStates(false);
+  });
 }, 3000);
-
 
 console.warn('👋 This message is being logged by "renderer.ts", included via Vite');
