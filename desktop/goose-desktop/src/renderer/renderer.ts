@@ -136,6 +136,7 @@ checkGoosedButton?.addEventListener('click', async () => {
 });
 
 // Check initial status
+setTimeout(() => {
 window.electronApi.checkGoosed().then((status) => {
   if (status.isRunning) {
     updateStatus(`Goosed is running on port ${status.port}`, true);
@@ -150,6 +151,7 @@ window.electronApi.checkGoosed().then((status) => {
   updateStatus(`Error checking status: ${error}`, true);
   updateButtonStates(false);
 });
+}, 3000);
 
 
 console.warn('👋 This message is being logged by "renderer.ts", included via Vite');
