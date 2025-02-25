@@ -1,4 +1,5 @@
 import { IpcRendererEvent } from 'electron';
+import { MetadataResponse } from '../main/main_ipc/types';
 
 export interface ElectronAPI {
   // Config and window management
@@ -13,7 +14,7 @@ export interface ElectronAPI {
 
   // Browser and metadata
   openInChrome: (url: string) => void;
-  fetchMetadata: (url: string) => Promise<any>;
+  fetchMetadata: (url: string) => Promise<MetadataResponse>;
 
   // System checks
   checkForOllama: () => Promise<boolean>;

@@ -9,8 +9,16 @@ export interface ChatWindowOptions {
   version?: string;
 }
 
+export interface Metadata {
+  title?: string;
+  description?: string;
+  favicon?: string;
+  image?: string;
+  url: string;
+}
+
 export interface MetadataResponse {
   success: boolean;
-  data?: string;
+  metadata?: Metadata;
   error?: string;
 }

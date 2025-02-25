@@ -14,6 +14,11 @@ const selectFileOrDirButton = document.getElementById('selectFileOrDir') as HTML
 const selectDirButton = document.getElementById('selectDir') as HTMLButtonElement;
 const fileSystemResultDiv = document.getElementById('file-system-result') as HTMLDivElement;
 
+// Get metadata elements
+const urlInput = document.getElementById('urlInput') as HTMLInputElement;
+const fetchMetadataButton = document.getElementById('fetchMetadata') as HTMLButtonElement;
+const metadataResultDiv = document.getElementById('metadata-result') as HTMLDivElement;
+
 // Add click handler for ping button
 pingButton?.addEventListener('click', () => {
   const timestamp = new Date().toISOString();
@@ -62,6 +67,49 @@ selectDirButton?.addEventListener('click', async () => {
     }
   } catch (error) {
     updateFileSystemResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
+// Function to format metadata for display
+function formatMetadata(metadata: { title?: string; description?: string; favicon?: string; image?: string; url: string }): string {
+  const lines = [
+    `Title: ${metadata.title || 'N/A'}`,
+    `Description: ${metadata.description || 'N/A'}`,
+    `Favicon: ${metadata.favicon || 'N/A'}`,
+    `Image: ${metadata.image || 'N/A'}`,
+    `URL: ${metadata.url}`
+  ];
+  return lines.join('\n');
+}
+
+// Function to update metadata result with timestamp
+function updateMetadataResult(message: string, append: boolean = false): void {
+  const timestamp = new Date().toISOString();
+  if (append) {
+    metadataResultDiv.innerHTML += `[${timestamp}] ${message}\n`;
+  } else {
+    metadataResultDiv.innerHTML = `[${timestamp}] ${message}\n`;
+  }
+}
+
+// Add click handler for fetch metadata button
+fetchMetadataButton?.addEventListener('click', async () => {
+  const url = urlInput.value.trim();
+  if (!url) {
+    updateMetadataResult('Please enter a URL');
+    return;
+  }
+
+  updateMetadataResult('Fetching metadata...');
+  try {
+    const result = await window.electronApi.fetchMetadata(url);
+    if (result.success && result.metadata) {
+      updateMetadataResult(`Success!\n${formatMetadata(result.metadata)}`, true);
+    } else {
+      updateMetadataResult(`Error: ${result.error}`, true);
+    }
+  } catch (error) {
+    updateMetadataResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
   }
 });
 
