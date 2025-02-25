@@ -17,14 +17,15 @@ const initializeApp = async (): Promise<void> => {
   		// ipcMainCode.listeners.browser(mainWindow);
 		// ipcMainCode.listeners.extension();
 		// ipcMainCode.handlers.browser();
-		ipcMainCode.handlers.fileSystem();
 
+		const cleanupFileSystemHandlers = ipcMainCode.handlers.fileSystem();
 		const cleanupSystemHandlers = ipcMainCode.handlers.system(app);
 		const cleanupPingHandler = setupPingHandler(app);
 		
 		// Handle window closure
 		mainWindow.on('closed', () => {
 			log.info('Main window closing - cleaning up...');
+			if (cleanupFileSystemHandlers) cleanupFileSystemHandlers();
 			if (cleanupSystemHandlers) cleanupSystemHandlers();
 			if (cleanupPingHandler) cleanupPingHandler();
 			mainWindow = null;
