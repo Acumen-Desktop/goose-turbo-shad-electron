@@ -14,6 +14,12 @@ Before making edits or changing/adding/deleting files, check GO for code and log
 
 Use functional programming instead of OOP. Use Yarn in the terminal. Use 'tsx' in the terminal as it is installed globally.
 
+"When suggesting or creating file names, incorporate meaningful path context into the file name itself. Instead of generic names like 'types.ts' or 'utils.ts', combine relevant path segments to create descriptive file names like 'api_types.ts' or 'server_base_utils.ts'. This makes files instantly identifiable without needing to see their full path and prevents naming conflicts when searching or referencing files. For example:
+
+Instead of: src/extensions/api/types.ts → use: src/extensions/api/api_types.ts
+Instead of: src/services/auth/utils.ts → use: src/services/auth/auth_utils.ts
+Instead of: src/components/header/index.ts → use: src/components/header/header_component.ts"
+
 ## Documentation Files
 
 The following markdown files provide detailed guidance on specific aspects of the codebase:

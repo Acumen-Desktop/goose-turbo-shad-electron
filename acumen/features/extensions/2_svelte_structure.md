@@ -3,6 +3,36 @@
 ## Project Organization
 
 ```
+desktop/goose-desktop/src/extensions/
+├── api/
+│   ├── extension_api_types.ts        # Extension API type definitions
+│   ├── extension_api_errors.ts       # API-specific error handling
+│   └── extension_api_validation.ts   # API input validation
+│
+├── core/
+│   ├── extension_core_types.ts       # Core MCP type definitions
+│   ├── extension_manager.ts          # Extension lifecycle management
+│   ├── extension_security.ts         # Security implementation
+│   └── extension_results.ts          # Result type handling
+│
+├── servers/
+│   ├── base/
+│   │   ├── server_base_types.ts      # Base server type definitions
+│   │   └── server_base_implementation.ts  # Base server functionality
+│   │
+│   ├── mcp-wiki/                     # Example MCP server
+│   │   ├── mcp_wiki_server.ts        # Wiki server implementation
+│   │   ├── mcp_wiki_config.ts        # Wiki server configuration
+│   │   └── tools/                    # Wiki-specific tools
+│   │
+│   └── mcp-realty/                   # Another MCP server example
+│
+└── utils/
+    ├── extension_validation_utils.ts  # Shared validation utilities
+    ├── extension_security_utils.ts    # Shared security utilities
+    └── extension_test_utils.ts        # Testing utilities
+
+
 apps/                   # Svelte applications
 ├── docs/              # Documentation app
 └── shad_starter/      # Main application template
