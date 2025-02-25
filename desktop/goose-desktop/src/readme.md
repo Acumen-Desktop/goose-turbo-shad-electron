@@ -29,7 +29,12 @@ The following markdown files provide detailed guidance on specific aspects of th
    - Type location conventions
    - Best practices for type management
 
-2. [IPC Reference](./main/main_ipc/IPC_REFERENCE.md)
+2. [Types Index](./types_index.md)
+   - Quick reference for all type definition locations
+   - Overview of type file organization
+   - Directory-based type categorization
+
+3. [IPC Reference](./main/main_ipc/IPC_REFERENCE.md)
    - Documentation for IPC communication
    - Channel definitions and usage
    - Event handling patterns
@@ -45,7 +50,8 @@ src/
 ├── renderer/          # Renderer process code
 ├── api/               # API integration
 ├── utils/            # Shared utilities
-└── types_instructions.md
+├── types_instructions.md
+└── types_index.md
 ```
 
 ## Important Notes
@@ -69,8 +75,9 @@ src/
 
 1. Read this readme first
 2. Review the types_instructions.md for type management
-3. Check IPC_REFERENCE.md for communication patterns
-4. Look for additional .md files in feature directories
+3. Check types_index.md for type locations
+4. Check IPC_REFERENCE.md for communication patterns
+5. Look for additional .md files in feature directories
 
 ## Maintenance
 
