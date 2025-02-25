@@ -1,7 +1,13 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC } from './main_ipc/ipc-channels';
-import type { ElectronAPI, AppConfigAPI, TestAPI } from '../types/electron-api';
-import type { NotificationData, ChatWindowOptions, GoosedStatus } from './main_ipc/types';
+import type { ElectronAPI, AppConfigAPI, TestAPI } from './types/electron/electron-api';
+import type { 
+  NotificationData, 
+  ChatWindowOptions, 
+  GoosedStartResponse,
+  GoosedStopResponse,
+  GoosedCheckResponse
+} from './main_ipc/types/index';
 
 // Parse config from process arguments
 const config = JSON.parse(process.argv.find((arg) => arg.startsWith('{')) || '{}');
@@ -34,11 +40,11 @@ const electronAPI: ElectronAPI = {
 
   // Goosed operations
   startGoosed: () => 
-    ipcRenderer.invoke(IPC.SYSTEM.START_GOOSED) as Promise<{ port?: number; error?: string }>,
+    ipcRenderer.invoke(IPC.SYSTEM.START_GOOSED) as Promise<GoosedStartResponse>,
   stopGoosed: (port: number) => 
-    ipcRenderer.invoke(IPC.SYSTEM.STOP_GOOSED, port) as Promise<{ isRunning: boolean; error?: string }>,
+    ipcRenderer.invoke(IPC.SYSTEM.STOP_GOOSED, port) as Promise<GoosedStopResponse>,
   checkGoosed: () => 
-    ipcRenderer.invoke(IPC.SYSTEM.CHECK_GOOSED) as Promise<{ isRunning: boolean; port?: number }>,
+    ipcRenderer.invoke(IPC.SYSTEM.CHECK_GOOSED) as Promise<GoosedCheckResponse>,
 
   // Notifications and logging
   logInfo: (txt: string) => ipcRenderer.send(IPC.NOTIFICATION.LOG_INFO, txt),

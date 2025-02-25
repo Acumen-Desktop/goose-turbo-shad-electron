@@ -1,5 +1,6 @@
 import './index.css';
 import type { IpcRendererEvent } from 'electron';
+import type { GoosedCheckResponse, GoosedStartResponse, GoosedStopResponse } from '../main/main_ipc/types';
 
 // Get button elements
 const pingButton = document.getElementById('pingButton') as HTMLButtonElement;
@@ -129,13 +130,8 @@ function updateButtonStates(isRunning: boolean): void {
   stopGoosedButton.disabled = !isRunning;
 }
 
-interface GoosedStatus {
-  isRunning: boolean;
-  port?: number;
-}
-
 // Function to handle Goosed status updates
-async function checkGoosedStatus(showMessage: boolean = true): Promise<GoosedStatus> {
+async function checkGoosedStatus(showMessage: boolean = true): Promise<GoosedCheckResponse> {
   try {
     if (showMessage) {
       updateStatus('Checking Goosed status...');
@@ -231,7 +227,7 @@ checkGoosedButton?.addEventListener('click', async () => {
 
 // Check initial status
 setTimeout(() => {
-  window.electronApi.checkGoosed().then((status: GoosedStatus) => {
+  window.electronApi.checkGoosed().then((status: GoosedCheckResponse) => {
     if (status.isRunning) {
       updateStatus(`Goosed is running on port ${status.port}`, true);
       currentGoosedPort = status.port;

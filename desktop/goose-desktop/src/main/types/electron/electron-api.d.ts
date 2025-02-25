@@ -1,5 +1,12 @@
 import { IpcRendererEvent } from 'electron';
-import { MetadataResponse, NotificationData } from '../main/main_ipc/types';
+import {
+  NotificationData,
+  MetadataResponse,
+  GoosedStartResponse,
+  GoosedStopResponse,
+  GoosedCheckResponse,
+  FileSystemResponse
+} from '../ipc/types';
 
 export interface ElectronAPI {
   // Config and window management
@@ -22,16 +29,16 @@ export interface ElectronAPI {
 
   // File system operations
   selectFileOrDirectory: () => Promise<string | null>;
-  directoryChooser: (replace: string) => void; // Updated to match GO version
+  directoryChooser: (replace: string) => void;
 
   // Power management
   startPowerSaveBlocker: () => Promise<number>;
   stopPowerSaveBlocker: () => Promise<void>;
 
   // Goosed management
-  startGoosed: () => Promise<{ port?: number; error?: string }>;
-  stopGoosed: (port: number) => Promise<{ isRunning: boolean; error?: string }>;
-  checkGoosed: () => Promise<{ isRunning: boolean; port?: number }>;
+  startGoosed: () => Promise<GoosedStartResponse>;
+  stopGoosed: (port: number) => Promise<GoosedStopResponse>;
+  checkGoosed: () => Promise<GoosedCheckResponse>;
 
   // Event handling
   on: (
