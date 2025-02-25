@@ -18,8 +18,8 @@ const electronAPI: ElectronAPI = {
   // File system
   selectFileOrDirectory: () => 
     ipcRenderer.invoke(IPC.FILE_SYSTEM.SELECT) as Promise<string | null>,
-  directoryChooser: () => 
-    ipcRenderer.invoke(IPC.FILE_SYSTEM.CHOOSE_DIRECTORY) as Promise<string | null>,
+  directoryChooser: (replace: string) => 
+    ipcRenderer.send(IPC.FILE_SYSTEM.CHOOSE_DIRECTORY, { replace }),
 
   // System operations
   reloadApp: () => ipcRenderer.send(IPC.SYSTEM.RELOAD_APP),

@@ -1,5 +1,5 @@
 import { IpcRendererEvent } from 'electron';
-import { MetadataResponse } from '../main/main_ipc/types';
+import { MetadataResponse, NotificationData } from '../main/main_ipc/types';
 
 export interface ElectronAPI {
   // Config and window management
@@ -10,7 +10,7 @@ export interface ElectronAPI {
 
   // Logging and notifications
   logInfo: (txt: string) => void;
-  showNotification: (data: any) => void;
+  showNotification: (data: NotificationData) => void;
 
   // Browser and metadata
   openInChrome: (url: string) => void;
@@ -22,7 +22,7 @@ export interface ElectronAPI {
 
   // File system operations
   selectFileOrDirectory: () => Promise<string | null>;
-  directoryChooser: () => Promise<string | null>;
+  directoryChooser: (replace: string) => void; // Updated to match GO version
 
   // Power management
   startPowerSaveBlocker: () => Promise<number>;

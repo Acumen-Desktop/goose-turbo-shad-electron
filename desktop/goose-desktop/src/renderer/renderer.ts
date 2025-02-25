@@ -59,12 +59,9 @@ selectFileOrDirButton?.addEventListener('click', async () => {
 selectDirButton?.addEventListener('click', async () => {
   updateFileSystemResult('Opening directory selector...');
   try {
-    const path = await window.electronApi.directoryChooser();
-    if (path) {
-      updateFileSystemResult(`Selected directory: ${path}`, true);
-    } else {
-      updateFileSystemResult('Selection cancelled', true);
-    }
+    // Call directoryChooser with a default directory path to replace
+    window.electronApi.directoryChooser('default_directory');
+    updateFileSystemResult('Directory selection initiated', true);
   } catch (error) {
     updateFileSystemResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
   }
