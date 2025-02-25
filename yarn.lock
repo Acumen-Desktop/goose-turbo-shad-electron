@@ -1263,6 +1263,7 @@ __metadata:
     prettier-plugin-svelte: "npm:^3.3.3"
     prettier-plugin-tailwindcss: "npm:^0.6.11"
     svelte-check: "npm:^4.1.4"
+    svelte-sonner: "npm:^0.3.28"
     tailwind-merge: "npm:^3.0.1"
     tailwind-variants: "npm:^0.3.1"
   peerDependencies:
@@ -7455,6 +7456,15 @@ __metadata:
     svelte:
       optional: true
   checksum: 10c0/52bbbf5d266fc36f64626e38d8de4354d78a5490fa60b61b1cd127c1c661d94f0c671a220e3ed7dd92b144a3c99f517d5205c218f78feea0603132f24eeb4c9d
+  languageName: node
+  linkType: hard
+
+"svelte-sonner@npm:^0.3.28":
+  version: 0.3.28
+  resolution: "svelte-sonner@npm:0.3.28"
+  peerDependencies:
+    svelte: ^3.0.0 || ^4.0.0 || ^5.0.0-next.1
+  checksum: 10c0/47db67b3a4c7c31be620e16c1bc88b392e8e8d8434e9e314efc771776c24ea35ebd69b196f2d5376b2526db839ddba4cc41e6da0c0b457b7f6d5253724741499
   languageName: node
   linkType: hard
 

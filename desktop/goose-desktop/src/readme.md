@@ -1,6 +1,18 @@
 # Goose Desktop Source Code Guide
 
-This document serves as an entry point for understanding the organization and documentation of the Goose Desktop application source code.
+We are working on refactoring the original 'goose ai agent project', which we will refer to a "GO" and it's source code is located in this folder: 'goose-original/ui/desktop'. Use GO as the 'source of truth', do not edit it. The orignal GO has a React frontend which we are refactoring into separate frontend (svelte), backend and ai folders.
+
+Our new version of 'goose ai' is located in this folder: 'desktop/goose-desktop' (GD). The 'main.ts' file is here: 'desktop/goose-desktop/src/main/main.ts'. And the main renderer html file is here: 'desktop/goose-desktop/src/renderer/index.html'.
+
+Our electron window system will be to always have a master 'mainWindow' which will create and manage 'parent' windows, which will create and manage 'child' windows. The parents and children will use sveltekit frontends from here: 'apps'.
+
+All our shared svelte components are in this folder: 'packages/ui' and mainly use 'shadcn-svelte'.
+
+Our notes are in this folder: 'acumen'.
+
+Before making edits or changing/adding/deleting files, check GO for code and logic, then check our modified folder structure. If you are not 100% sure, ask for help.
+
+Use functional programming instead of OOP. Use Yarn in the terminal. Use 'tsx' in the terminal as it is installed globally.
 
 ## Documentation Files
 
