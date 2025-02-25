@@ -8,7 +8,17 @@ import {
   GoosedStopResponse,
   PowerSaveBlockerResponse 
 } from './system.types';
-import { ExtensionInstallOptions, ExtensionResponse } from './extension.types';
+import {
+  ExtensionInstallOptions,
+  ExtensionResponse,
+  McpToolExecuteParams,
+  McpToolExecuteResponse,
+  McpToolListParams,
+  McpToolListResponse,
+  McpExtensionRegisterParams,
+  McpExtensionRegisterResponse,
+  McpExtensionListResponse
+} from './extension.types';
 
 // Channel parameter and return type mappings
 export interface IPCChannelTypes {
@@ -98,6 +108,24 @@ export interface IPCChannelTypes {
   'install-extension-url': {
     params: ExtensionInstallOptions;
     returns: ExtensionResponse;
+  };
+
+  // MCP channels
+  'mcp:execute-tool': {
+    params: McpToolExecuteParams;
+    returns: McpToolExecuteResponse;
+  };
+  'mcp:list-tools': {
+    params: McpToolListParams | undefined;
+    returns: McpToolListResponse;
+  };
+  'mcp:register-extension': {
+    params: McpExtensionRegisterParams;
+    returns: McpExtensionRegisterResponse;
+  };
+  'mcp:list-extensions': {
+    params: void;
+    returns: McpExtensionListResponse;
   };
   
   // Test channels

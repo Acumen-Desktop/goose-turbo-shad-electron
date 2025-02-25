@@ -116,10 +116,10 @@ export const createExtensionManager = () => {
    * Lists all registered extensions and their tools
    */
   const listExtensions = () => {
-    const result: Record<string, string[]> = {}
+    const result: Record<string, Tool[]> = {}
     
     for (const [name, tools] of extensions.entries()) {
-      result[name] = tools.map(t => t.name)
+      result[name] = tools
     }
     
     return result
@@ -152,19 +152,30 @@ export const createExtensionManager = () => {
   }
 }
 
-// Note: These functions would be implemented in separate files
-// based on extension type
+import { BuiltinToolLoader } from './mcp_builtin_loader';
+
+// Create loaders
+const builtinLoader = new BuiltinToolLoader();
+
 const loadBuiltinTools = async (config: ExtensionConfig): Promise<Tool[]> => {
-  // Implementation for built-in tools
-  throw new Error('Not implemented')
+  if (!config.tools || !Array.isArray(config.tools)) {
+    throw new Error('No tools defined in builtin extension config');
+  }
+
+  // Register each tool with the loader
+  for (const tool of config.tools) {
+    builtinLoader.registerTool(tool);
+  }
+
+  return config.tools;
 }
 
 const loadSseTools = async (config: ExtensionConfig): Promise<Tool[]> => {
   // Implementation for SSE-based tools
-  throw new Error('Not implemented')
+  throw new Error('SSE tools not yet implemented');
 }
 
 const loadStdioTools = async (config: ExtensionConfig): Promise<Tool[]> => {
   // Implementation for stdio-based tools
-  throw new Error('Not implemented')
+  throw new Error('stdio tools not yet implemented');
 }

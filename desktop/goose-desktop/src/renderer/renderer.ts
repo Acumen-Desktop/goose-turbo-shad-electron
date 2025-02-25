@@ -20,6 +20,96 @@ const urlInput = document.getElementById('urlInput') as HTMLInputElement;
 const fetchMetadataButton = document.getElementById('fetchMetadata') as HTMLButtonElement;
 const metadataResultDiv = document.getElementById('metadata-result') as HTMLDivElement;
 
+// Get MCP elements
+const listExtensionsButton = document.getElementById('listExtensions') as HTMLButtonElement;
+const listToolsButton = document.getElementById('listTools') as HTMLButtonElement;
+const registerTestExtButton = document.getElementById('registerTestExt') as HTMLButtonElement;
+const executeTestToolButton = document.getElementById('executeTestTool') as HTMLButtonElement;
+const mcpResultDiv = document.getElementById('mcp-result') as HTMLDivElement;
+
+// Function to update MCP result with timestamp
+function updateMcpResult(message: string, append: boolean = false): void {
+  const timestamp = new Date().toISOString();
+  if (append) {
+    mcpResultDiv.innerHTML += `[${timestamp}] ${message}\n`;
+  } else {
+    mcpResultDiv.innerHTML = `[${timestamp}] ${message}\n`;
+  }
+}
+
+import type { Tool } from '../extensions/mcp_core_types';
+
+// Test extension configuration
+const testExtension = {
+  type: 'builtin' as const,
+  name: 'test-extension',
+  tools: [{
+    name: 'hello',
+    description: 'A simple hello world tool',
+    parameters: [{
+      name: 'name',
+      description: 'Name to greet',
+      type: 'string',
+      required: true
+    }],
+    execute: async (params: unknown) => {
+      const { name } = params as { name: string };
+      return {
+        data: `Hello, ${name}!`,
+        error: false
+      };
+    }
+  } satisfies Tool]
+};
+
+// Add click handler for list extensions button
+listExtensionsButton?.addEventListener('click', async () => {
+  updateMcpResult('Listing extensions...');
+  try {
+    const result = await window.mcpApi.listExtensions();
+    updateMcpResult(`Extensions:\n${JSON.stringify(result, null, 2)}`, true);
+  } catch (error) {
+    updateMcpResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
+// Add click handler for list tools button
+listToolsButton?.addEventListener('click', async () => {
+  updateMcpResult('Listing tools...');
+  try {
+    const result = await window.mcpApi.listTools();
+    updateMcpResult(`Tools:\n${JSON.stringify(result, null, 2)}`, true);
+  } catch (error) {
+    updateMcpResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
+// Add click handler for register test extension button
+registerTestExtButton?.addEventListener('click', async () => {
+  updateMcpResult('Registering test extension...');
+  try {
+    const result = await window.mcpApi.registerExtension({ config: testExtension });
+    updateMcpResult(`Registration result:\n${JSON.stringify(result, null, 2)}`, true);
+  } catch (error) {
+    updateMcpResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
+// Add click handler for execute test tool button
+executeTestToolButton?.addEventListener('click', async () => {
+  updateMcpResult('Executing test tool...');
+  try {
+    const result = await window.mcpApi.executeTool({
+      extensionName: 'test-extension',
+      toolName: 'hello',
+      params: { name: 'World' }
+    });
+    updateMcpResult(`Execution result:\n${JSON.stringify(result, null, 2)}`, true);
+  } catch (error) {
+    updateMcpResult(`Error: ${error instanceof Error ? error.message : String(error)}`, true);
+  }
+});
+
 // Add click handler for ping button
 pingButton?.addEventListener('click', () => {
   const timestamp = new Date().toISOString();
@@ -230,7 +320,7 @@ setTimeout(() => {
   window.electronApi.checkGoosed().then((status: GoosedCheckResponse) => {
     if (status.isRunning) {
       updateStatus(`Goosed is running on port ${status.port}`, true);
-      currentGoosedPort = status.port;
+      currentGoosedPort = status.port ?? null;
     } else {
       updateStatus('Goosed is not running', true);
       currentGoosedPort = null;

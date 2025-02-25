@@ -1,4 +1,9 @@
 import type { IPCChannelTypes } from './types';
+import {
+  isMcpToolExecuteParams,
+  isMcpToolListParams,
+  isMcpExtensionRegisterParams
+} from './types/extension.types';
 
 // Type-safe channel names
 export const IPC = {
@@ -34,6 +39,12 @@ export const IPC = {
   EXTENSION: {
     ADD: 'add-extension',
     INSTALL_URL: 'install-extension-url',
+    MCP: {
+      EXECUTE_TOOL: 'mcp:execute-tool',
+      LIST_TOOLS: 'mcp:list-tools',
+      REGISTER_EXTENSION: 'mcp:register-extension',
+      LIST_EXTENSIONS: 'mcp:list-extensions',
+    },
   },
   TEST: {
     PING: 'test:ping',
@@ -97,6 +108,18 @@ export const validateChannelParams = <T extends IPCChannelName>(
     
     case IPC.SYSTEM.STOP_GOOSED:
       return typeof params === 'number';
+    
+    case IPC.EXTENSION.MCP.EXECUTE_TOOL:
+      return isMcpToolExecuteParams(params);
+    
+    case IPC.EXTENSION.MCP.LIST_TOOLS:
+      return params === undefined || isMcpToolListParams(params);
+    
+    case IPC.EXTENSION.MCP.REGISTER_EXTENSION:
+      return isMcpExtensionRegisterParams(params);
+    
+    case IPC.EXTENSION.MCP.LIST_EXTENSIONS:
+      return params === undefined;
     
     // Add more specific validations as needed
     default:
