@@ -1,6 +1,6 @@
-import { ipcMain } from 'electron';
+import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { IPC } from '../ipc-channels';
-import { MetadataResponse, Metadata } from '../types';
+import { MetadataResponse, Metadata, IPCMainHandler } from '../types';
 import log from '../../../utils/logger';
 import * as cheerio from 'cheerio';
 
@@ -75,45 +75,58 @@ async function extractMetadata(html: string, baseUrl: string): Promise<Metadata>
   };
 }
 
-export function registerBrowserHandlers(): () => void {
-  ipcMain.handle(IPC.BROWSER.FETCH_METADATA, async (_, url: string): Promise<MetadataResponse> => {
-    try {
-      if (!isValidUrl(url)) {
-        throw new Error('Invalid URL format');
-      }
-
-      const formattedUrl = formatUrl(url);
-      const response = await fetch(formattedUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; Goose/1.0)',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const html = await response.text();
-      const metadata = await extractMetadata(html, formattedUrl);
-
-      return { 
-        success: true, 
-        metadata 
-      };
-    } catch (error) {
-      log.error('Error fetching metadata:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error',
-        metadata: {
-          title: url,
-          url
-        }
-      };
+const handleFetchMetadata: IPCMainHandler<string, MetadataResponse> = async (event, url) => {
+  try {
+    if (!isValidUrl(url)) {
+      throw new Error('Invalid URL format');
     }
-  });
-  // Return cleanup function to remove handlers
-    return () => {
-      ipcMain.removeHandler(IPC.BROWSER.FETCH_METADATA);
+
+    const formattedUrl = formatUrl(url);
+    const response = await fetch(formattedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; Goose/1.0)',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const html = await response.text();
+    const metadata = await extractMetadata(html, formattedUrl);
+
+    return { 
+      success: true, 
+      metadata 
     };
+  } catch (error) {
+    log.error('Error fetching metadata:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      metadata: {
+        title: url,
+        url
+      }
+    };
+  }
+};
+
+const handleOpenInChrome: IPCMainHandler<string, void> = async (event, url) => {
+  if (!isValidUrl(url)) {
+    throw new Error('Invalid URL parameter');
+  }
+  // Implementation handled by the system's default handler
+};
+
+export function registerBrowserHandlers(): () => void {
+  // Register handlers
+  ipcMain.handle(IPC.BROWSER.FETCH_METADATA, handleFetchMetadata);
+  ipcMain.handle(IPC.BROWSER.OPEN_CHROME, handleOpenInChrome);
+
+  // Return cleanup function
+  return () => {
+    ipcMain.removeHandler(IPC.BROWSER.FETCH_METADATA);
+    ipcMain.removeHandler(IPC.BROWSER.OPEN_CHROME);
+  };
 }
