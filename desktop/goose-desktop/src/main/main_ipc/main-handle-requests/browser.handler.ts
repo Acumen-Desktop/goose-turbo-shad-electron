@@ -75,7 +75,7 @@ async function extractMetadata(html: string, baseUrl: string): Promise<Metadata>
   };
 }
 
-export function registerBrowserHandlers(): void {
+export function registerBrowserHandlers(): () => void {
   ipcMain.handle(IPC.BROWSER.FETCH_METADATA, async (_, url: string): Promise<MetadataResponse> => {
     try {
       if (!isValidUrl(url)) {
@@ -112,4 +112,8 @@ export function registerBrowserHandlers(): void {
       };
     }
   });
+  // Return cleanup function to remove handlers
+    return () => {
+      ipcMain.removeHandler(IPC.BROWSER.FETCH_METADATA);
+    };
 }
