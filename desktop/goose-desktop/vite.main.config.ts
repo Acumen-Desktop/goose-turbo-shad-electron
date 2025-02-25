@@ -1,12 +1,23 @@
 import { defineConfig } from 'vite';
+import path from 'node:path';
 
 // https://vitejs.dev/config
 export default defineConfig({
-	build: {
-		rollupOptions: {
-			output: {
-				format: 'cjs'
-			}
-		}
-	}
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        'electron',
+        'electron-log',
+        'electron-squirrel-startup',
+        'node:path',
+        'node:child_process',
+        'node:stream'
+      ]
+    }
+  }
 });
