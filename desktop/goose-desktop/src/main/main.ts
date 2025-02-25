@@ -14,10 +14,8 @@ const initializeApp = async (): Promise<void> => {
 		mainWindow = await createMainWindow();
 		
 		// Register all IPC functionality
-				ipcMainCode.listeners.browser(mainWindow);
-		ipcMainCode.listeners.extension();
-		
-		const cleanupBrowserHandlers = ipcMainCode.handlers.browser(mainWindow);
+		const cleanupExtensionListeners = ipcMainCode.listeners.extension();
+		const cleanupBrowserHandlers = ipcMainCode.handlers.browser();
 		const cleanupFileSystemHandlers = ipcMainCode.handlers.fileSystem();
 		const cleanupSystemHandlers = ipcMainCode.handlers.system(app);
 		const cleanupPingHandler = setupPingHandler(app);
@@ -28,6 +26,8 @@ const initializeApp = async (): Promise<void> => {
 			if (cleanupFileSystemHandlers) cleanupFileSystemHandlers();
 			if (cleanupSystemHandlers) cleanupSystemHandlers();
 			if (cleanupPingHandler) cleanupPingHandler();
+			if (cleanupBrowserHandlers) cleanupBrowserHandlers();
+			if (cleanupExtensionListeners) cleanupExtensionListeners();
 			mainWindow = null;
 		});
 
