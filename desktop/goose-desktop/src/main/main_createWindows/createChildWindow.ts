@@ -2,12 +2,12 @@ import type { ChildProcessByStdio } from 'node:child_process';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { app, BrowserWindow } from 'electron';
-import { startGoosed } from '../../ipc_OLD/handlers/goosed_OLD';
+import { startGoosed } from '../main_ai/goosed';
 import { createWindow } from './utils_window';
 
 // These should be defined by Vite, but let's check if they exist
-declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
-declare const MAIN_WINDOW_VITE_NAME: string | undefined;
+declare var MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
+declare var MAIN_WINDOW_VITE_NAME: string | undefined;
 
 export const createChildWindow = async (): Promise<BrowserWindow> => {
 	const [window, _goosedProcess] = await createWindow({

@@ -4,6 +4,9 @@ import path from 'node:path';
 import { BrowserWindow } from 'electron';
 
 // import { startGoosed, setGoosedProcess } from '../handlers/goosed_OLD';
+// These should be defined by Vite, but let's check if they exist
+declare var MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
+declare var MAIN_WINDOW_VITE_NAME: string | undefined;
 
 export const createWindow = async (options: {
 	title: string;

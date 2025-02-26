@@ -6,6 +6,7 @@ import log from '../utils/logger';
 import { createMainWindow } from './main_createWindows/createMainWindow';
 import { ipcMainCode } from './main_ipc/index';
 import { setupPingHandler } from './main_ipc/tests/ping.handler';
+import { startGoosed } from './main_ai/goosed';
 
 // import { setupAppHandlers, setupErrorHandlers } from './utils_setup';
 // import { setupIpcHandlers } from './ipc_OLD/setup';
@@ -52,6 +53,9 @@ function sendExtensionUrl(targetWindow: BrowserWindow, url: string) {
 const initializeApp = async (): Promise<void> => {
 	try {
 		mainWindow = await createMainWindow();
+
+		const [port, working_dir, goosedProcess] = await startGoosed(app, dir);
+		log.info(`Started goosed on port ${port} in dir ${working_dir}, pid ${goosedProcess.pid}`);
 
 		// Register all IPC functionality
 		const cleanupExtensionListeners = ipcMainCode.listeners.extension();
