@@ -8,6 +8,8 @@ The layout started of from Vercel's "Turborepo Starter with Svelte": https://git
 
 It transitions from a React frontend to a Svelte-based architecture while maintaining the Electron desktop application functionality.
 
+The main entry point for the GD application is `desktop/goose-desktop/src/main/main.ts`, and the renderer process is `desktop/goose-desktop/src/renderer/index.html`. Run 'yarn start' from the root to start the application.
+
 ## Repository Structure
 
 The codebase follows a monorepo approach with these main directories:

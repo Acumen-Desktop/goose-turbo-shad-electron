@@ -1,70 +1,67 @@
 import { IpcRendererEvent } from 'electron';
 import {
-  NotificationData,
-  MetadataResponse,
-  GoosedStartResponse,
-  GoosedStopResponse,
-  GoosedCheckResponse,
-  FileSystemResponse
+	FileSystemResponse,
+	GoosedCheckResponse,
+	GoosedStartResponse,
+	GoosedStopResponse,
+	MetadataResponse,
+	NotificationData
 } from '../ipc/types';
 
 export interface ElectronAPI {
-  // Config and window management
-  getConfig: () => Record<string, any>;
-  hideWindow: () => void;
-  createChatWindow: (query?: string, dir?: string, version?: string) => void;
-  reloadApp: () => void;
+	// Config and window management
+	getConfig: () => Record<string, any>;
+	hideWindow: () => void;
+	createChatWindow: (query?: string, dir?: string, version?: string) => void;
+	reloadApp: () => void;
 
-  // Logging and notifications
-  logInfo: (txt: string) => void;
-  showNotification: (data: NotificationData) => void;
+	// Logging and notifications
+	logInfo: (txt: string) => void;
+	showNotification: (data: NotificationData) => void;
 
-  // Browser and metadata
-  openInChrome: (url: string) => void;
-  fetchMetadata: (url: string) => Promise<MetadataResponse>;
+	// Browser and metadata
+	openInChrome: (url: string) => void;
+	fetchMetadata: (url: string) => Promise<MetadataResponse>;
 
-  // System checks
-  checkForOllama: () => Promise<boolean>;
-  getBinaryPath: (binaryName: string) => Promise<string>;
+	// System checks
+	checkForOllama: () => Promise<boolean>;
+	getBinaryPath: (binaryName: string) => Promise<string>;
 
-  // File system operations
-  selectFileOrDirectory: () => Promise<string | null>;
-  directoryChooser: (replace: string) => void;
+	// File system operations
+	selectFileOrDirectory: () => Promise<string | null>;
+	directoryChooser: (replace: string) => void;
 
-  // Power management
-  startPowerSaveBlocker: () => Promise<number>;
-  stopPowerSaveBlocker: () => Promise<void>;
+	// Power management
+	startPowerSaveBlocker: () => Promise<number>;
+	stopPowerSaveBlocker: () => Promise<void>;
 
-  // Goosed management
-  startGoosed: () => Promise<GoosedStartResponse>;
-  stopGoosed: (port: number) => Promise<GoosedStopResponse>;
-  checkGoosed: () => Promise<GoosedCheckResponse>;
+	// Goosed management
+	startGoosed: () => Promise<GoosedStartResponse>;
+	stopGoosed: (port: number) => Promise<GoosedStopResponse>;
+	checkGoosed: () => Promise<GoosedCheckResponse>;
 
-  // Event handling
-  on: (
-    channel: string,
-    callback: (event: IpcRendererEvent, ...args: any[]) => void
-  ) => void;
-  off: (
-    channel: string,
-    callback: (event: IpcRendererEvent, ...args: any[]) => void
-  ) => void;
-  emit: (channel: string, ...args: any[]) => void;
+	// Extension operations
+	addExtension: (url: string) => Promise<any>;
+
+	// Event handling
+	on: (channel: string, callback: (event: IpcRendererEvent, ...args: any[]) => void) => void;
+	off: (channel: string, callback: (event: IpcRendererEvent, ...args: any[]) => void) => void;
+	emit: (channel: string, ...args: any[]) => void;
 }
 
 export interface AppConfigAPI {
-  get: (key: string) => any;
-  getAll: () => Record<string, any>;
+	get: (key: string) => any;
+	getAll: () => Record<string, any>;
 }
 
 export interface TestAPI {
-  sendPing: () => Promise<{ timestamp: string; message: string }>;
+	sendPing: () => Promise<{ timestamp: string; message: string }>;
 }
 
 declare global {
-  interface Window {
-    electronApi: ElectronAPI;
-    appConfigApi: AppConfigAPI;
-    testApi: TestAPI;
-  }
+	interface Window {
+		electronApi: ElectronAPI;
+		appConfigApi: AppConfigAPI;
+		testApi: TestAPI;
+	}
 }
