@@ -1,9 +1,14 @@
 {
-	"name": "@repo/typescript-config",
+	"name": "@acumen-desktop/typescript-config",
 	"version": "0.0.0",
 	"private": true,
 	"license": "MIT",
 	"type": "module",
+	"exports": {
+		".": "./base.json",
+		"./base.json": "./base.json",
+		"./svelte.json": "./svelte.json"
+	},
 	"publishConfig": {
 		"access": "public"
 	}

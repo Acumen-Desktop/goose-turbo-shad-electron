@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MyCounterButton } from '@repo/ui';
+	import { MyCounterButton } from '@acumen-desktop/ui';
 </script>
 
 <h1>Web</h1>

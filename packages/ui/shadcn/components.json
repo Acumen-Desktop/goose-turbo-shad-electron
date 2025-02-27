@@ -7,10 +7,10 @@
 		"baseColor": "slate"
 	},
 	"aliases": {
-		"components": "@repo/ui",
-		"utils": "@repo/ui/shadcn/utils",
-		"ui": "@repo/ui",
-		"hooks": "@repo/ui/shadcn/hooks"
+		"components": "@acumen-desktop/ui",
+		"utils": "@acumen-desktop/ui/shadcn/utils",
+		"ui": "@acumen-desktop/ui",
+		"hooks": "@acumen-desktop/ui/shadcn/hooks"
 	},
 	"typescript": true,
 	"registry": "https://next.shadcn-svelte.com/registry"

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { config: baseConfig } = require('@repo/eslint-config');
+const { config: baseConfig } = require('@acumen-desktop/eslint-config');
 
 /** @type {import('eslint').Linter.Config[]} */
 module.exports = [
