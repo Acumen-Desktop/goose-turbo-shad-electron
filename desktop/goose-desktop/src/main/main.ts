@@ -54,8 +54,8 @@ const initializeApp = async (): Promise<void> => {
 	try {
 		mainWindow = await createMainWindow();
 
-		const [port, working_dir, goosedProcess] = await startGoosed(app, dir);
-		log.info(`Started goosed on port ${port} in dir ${working_dir}, pid ${goosedProcess.pid}`);
+		// const [port, working_dir, goosedProcess] = await startGoosed(app, dir);
+		// log.info(`Started goosed on port ${port} in dir ${working_dir}, pid ${goosedProcess.pid}`);
 
 		// Register all IPC functionality
 		const cleanupExtensionListeners = ipcMainCode.listeners.extension();
