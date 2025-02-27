@@ -1,5 +1,5 @@
 {
-	"name": "@repo/ui",
+	"name": "@goose/ui",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -33,18 +33,14 @@
 		"tailwind-variants": "^0.3.1"
 	},
 	"devDependencies": {
-		"@repo/eslint-config": "workspace:*",
-		"@repo/typescript-config": "workspace:*",
-		"@sveltejs/kit": "^2.0.0",
-		"@tailwindcss/vite": "^4.0.0",
+		"@goose/eslint-config": "workspace:*",
+		"@goose/typescript-config": "workspace:*",
 		"@types/node": "^20.0.0",
 		"eslint": "^9.20.1",
-		"eslint-config-prettier": "^10.0.1",
-		"eslint-plugin-svelte": "^2.46.1",
-		"prettier": "^3.5.1",
-		"prettier-plugin-svelte": "^3.3.3",
-		"prettier-plugin-tailwindcss": "^0.6.11",
-		"svelte-check": "^4.1.4"
+		"svelte": "^5.20.2",
+		"tailwindcss": "^4.0.0",
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.24.1"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0",

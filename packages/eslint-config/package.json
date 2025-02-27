@@ -1,5 +1,5 @@
 {
-	"name": "@repo/eslint-config",
+	"name": "@goose/eslint-config",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -7,16 +7,16 @@
 		".": "./index.js"
 	},
 	"dependencies": {
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.20.0",
+		"eslint": "^9.20.1",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-svelte": "^2.46.1",
 		"globals": "^16.0.0"
 	},
 	"peerDependencies": {
-		"@eslint/eslintrc": "*",
-		"@eslint/js": "*",
-		"eslint": "*",
-		"eslint-config-prettier": "*",
-		"eslint-plugin-svelte": "*",
-		"typescript": "*",
-		"typescript-eslint": "*"
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.24.1"
 	},
 	"publishConfig": {
 		"access": "public"

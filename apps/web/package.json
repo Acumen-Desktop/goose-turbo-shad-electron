@@ -1,5 +1,5 @@
 {
-	"name": "web",
+	"name": "@goose/web",
 	"version": "0.0.1",
 	"private": true,
 	"type": "module",
@@ -17,20 +17,25 @@
 		"test:unit": "vitest"
 	},
 	"dependencies": {
-		"@repo/ui": "workspace:^"
+		"@goose/ui": "workspace:*",
+		"svelte": "^5.20.2",
+		"vite": "^6.1.1"
 	},
 	"devDependencies": {
-		"@repo/eslint-config": "workspace:^",
-		"@repo/typescript-config": "workspace:^",
+		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/js": "^9.20.0",
+		"@goose/eslint-config": "workspace:*",
+		"@goose/typescript-config": "workspace:*",
 		"@sveltejs/adapter-static": "^3.0.8",
-		"@sveltejs/kit": "^2.17.2",
-		"@sveltejs/vite-plugin-svelte": "^5.0.3",
-		"@tailwindcss/vite": "^4.0.0",
-		"svelte": "^5.20.2",
-		"svelte-check": "^4.1.4",
+		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"eslint": "^9.20.1",
+		"eslint-config-prettier": "^10.0.1",
+		"eslint-plugin-svelte": "^2.46.1",
+		"globals": "^16.0.0",
 		"tailwindcss": "^4.0.0",
-		"tslib": "^2.8.1",
-		"vite": "^6.1.1",
-		"vitest": "^3.0.6"
+		"typescript": "^5.7.3",
+		"typescript-eslint": "^8.24.1",
+		"vitest": "^3.0.7"
 	}
 }

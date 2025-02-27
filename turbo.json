@@ -12,7 +12,8 @@
 				"^build"
 			],
 			"inputs": [
-				"**/*.{ts,tsx,js,jsx,svelte}"
+				"apps/**/*.{ts,tsx,js,jsx,svelte}",
+				"packages/**/*.{ts,tsx,js,jsx,svelte}"
 			],
 			"outputs": [
 				".svelte-kit/**",

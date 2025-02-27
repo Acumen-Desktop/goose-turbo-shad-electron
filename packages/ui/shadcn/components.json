@@ -7,10 +7,10 @@
 		"baseColor": "slate"
 	},
 	"aliases": {
-		"components": "@repo/ui",
-		"utils": "@repo/ui/shadcn/utils",
-		"ui": "@repo/ui",
-		"hooks": "@repo/ui/shadcn/hooks"
+		"components": "@goose/ui",
+		"utils": "@goose/ui/shadcn/utils",
+		"ui": "@goose/ui",
+		"hooks": "@goose/ui/shadcn/hooks"
 	},
 	"typescript": true,
 	"registry": "https://next.shadcn-svelte.com/registry"

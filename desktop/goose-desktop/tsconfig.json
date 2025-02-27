@@ -1,4 +1,5 @@
 {
+  "extends": "@goose/typescript-config/base.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",

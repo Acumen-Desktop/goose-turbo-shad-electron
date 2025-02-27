@@ -1,4 +1,4 @@
 @import 'tailwindcss';
-@import '@repo/ui/global.css';
+@import '@goose/ui/global.css';
 
 /* Add app-specific styles below (non-Tailwind classes, IDs, etc) */

@@ -1,9 +1,15 @@
 {
-	"name": "@repo/typescript-config",
+	"name": "@goose/typescript-config",
 	"version": "0.0.0",
 	"private": true,
 	"license": "MIT",
 	"type": "module",
+	"main": "base.json",
+	"files": [
+		"base.json",
+		"svelte.json",
+		"type-utils.ts"
+	],
 	"publishConfig": {
 		"access": "public"
 	}

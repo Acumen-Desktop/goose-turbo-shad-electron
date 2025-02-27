@@ -1,4 +1,4 @@
-import { config as baseConfig } from '@repo/eslint-config';
+import { config as baseConfig } from '@goose/eslint-config';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
