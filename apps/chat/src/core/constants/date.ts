@@ -1,0 +1,5 @@
+export const DAY_MONTH_YEAR_DATE_FORMAT = 'DD-MM-YYYY';
+export const DAY_MONTH_STRING_YEAR_DATE_FORMAT = 'DD MMM YYYY';
+export const HOUR_MINUTE_SECOND_DATE_FORMAT = 'hh:mm:ss A';
+export const ONE_HOUR_MINUTE_SECOND_DATE_FORMAT = 'h:mm:ss A';
+export const HOUR_MINUTE_DAY_MONTH_YEAR_DATE_FORMAT = 'h:mm A - D MMM YYYY';
